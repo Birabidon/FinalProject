@@ -2,6 +2,8 @@ import './bootstrap';
 import '../css/app.css';
 import { createApp, h } from 'vue'
 import { createInertiaApp } from '@inertiajs/vue3'
+import { renderApp } from '@inertiaui/modal-vue'
+import { Head } from '@inertiajs/vue3'
 
 createInertiaApp({
     resolve: name => {
@@ -10,7 +12,8 @@ createInertiaApp({
     },
     title: title => `${title} | MyProject`,
     setup({ el, App, props, plugin }) {
-        createApp({ render: () => h(App, props) })
+        createApp({ render: renderApp(App, props) })
+            .component('Head', Head)
             .use(plugin)
             .mount(el)
     },

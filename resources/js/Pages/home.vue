@@ -14,11 +14,11 @@ const handleMarkerClick = (marker) => {
 </script>
 
 <template>
-    <head>
+    <Head>
         <title>Home</title>
-    </head>
+    </Head>
 
-    <AppLayout>
+    <component :is="user ? AppLayout : GuestLayout">
         <div id="map"></div>
 <!--            <GoogleMap-->
 <!--                api-key="AIzaSyAnlSRXNY5cHoUQ1jCzU526gaRjrDgNgj0"-->
@@ -37,18 +37,20 @@ const handleMarkerClick = (marker) => {
 <!--                    </InfoWindow>-->
 <!--                </Marker>-->
 <!--            </GoogleMap>-->
-    </AppLayout>
+    </component>
 
 </template>
 
 <script>
 import AppLayout from '@/Layouts/App.vue'
+import GuestLayout from '@/Layouts/Guest.vue'
 export default {
     components: {
         AppLayout
     },
     props: {
-        markers: Object
+        markers: Object,
+        user: String
     }
 }
 </script>

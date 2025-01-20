@@ -3,7 +3,7 @@
 </script>
 
 <template>
-    <Head title="about"/>
+    <Head title="About"/>
 
     <AppLayout>
         <h1>About Us</h1>
@@ -13,11 +13,10 @@
 </template>
 
 <script>
-import { Head } from '@inertiajs/vue3'
 import AppLayout from '@/Layouts/App.vue'
 export default {
     components: {
-        AppLayout, Head
+        AppLayout
     }
 }
 </script>

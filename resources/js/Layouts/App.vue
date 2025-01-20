@@ -11,10 +11,10 @@
         </ul>
 
         <div id="name">
-            <p>Hello, User</p>
+            <p>Hello, {{ $page.props.user }}</p>
         </div>
         <div class="account">
-            <Link href="">Logout</Link>
+            <Link href="login">Logout</Link>
         </div>
     </header>
 

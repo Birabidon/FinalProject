@@ -8,6 +8,7 @@ export default {
         './resources/**/*.blade.php',
         './resources/**/*.js',
         './resources/**/*.vue',
+        './node_modules/@inertiaui/modal-vue/src/**/*.{js,vue}' // this is for InertiaUI Modal design
     ],
     theme: {
         extend: {

@@ -1,6 +1,3 @@
-<script setup>
-
-</script>
 
 <template>
     <header>
@@ -11,7 +8,7 @@
         </ul>
 
         <div class="account">
-            <Link href="login">Login</Link>
+            <Link href="">Login</Link>
             <Link href="">Register</Link>
         </div>
     </header>
@@ -52,14 +49,28 @@
     </footer>
 </template>
 
-<script>
+<script setup>
 import { Link } from '@inertiajs/vue3'
-export default {
-    components: {
-        Link
-    }
-}
+import { ModalLink } from '@inertiaui/modal-vue'
+
 </script>
+
+<!--<script>-->
+<!--import { Link } from '@inertiajs/vue3'-->
+<!--import { Modal, ModalLink } from '@inertiaui/modal-vue'-->
+<!--export default {-->
+<!--    data() {-->
+<!--        return {-->
+<!--            showModal: false-->
+<!--        }-->
+<!--    },-->
+<!--    components: {-->
+<!--        Link, Modal, ModalLink-->
+<!--    }-->
+<!--}-->
+<!--</script>-->
+
+
 <style scoped>
 
 </style>
