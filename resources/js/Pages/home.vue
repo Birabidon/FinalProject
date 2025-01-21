@@ -14,9 +14,7 @@ const handleMarkerClick = (marker) => {
 </script>
 
 <template>
-    <Head>
-        <title>Home</title>
-    </Head>
+    <Head title="Home"/>
 
     <component :is="user ? AppLayout : GuestLayout">
         <div id="map"></div>

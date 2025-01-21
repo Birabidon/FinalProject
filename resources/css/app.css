@@ -2,6 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Layout */
 body {
     margin: 0;
     display: grid;
@@ -68,4 +69,40 @@ main {
 
 .active {
     font-weight: bold;
+}
+
+/* Styles for registerModal */
+.modal h1 {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+.modal form {
+    display: flex;
+    flex-direction: column;
+}
+
+.modal label {
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.modal input {
+    margin-bottom: 15px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.modal button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.modal button:hover {
+    background-color: #0056b3;
 }

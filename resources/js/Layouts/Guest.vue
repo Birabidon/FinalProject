@@ -3,13 +3,13 @@
     <header>
         <ul>
             <li><Link href="/" :class="{'active': $page.component === 'home'}">Home</Link></li>
-            <li><Link href="about" :class="{'active': $page.component === 'about'}">About</Link></li>
+            <li><Link href="/about" :class="{'active': $page.component === 'about'}">About</Link></li>
             <li><Link href="">Contact</Link></li>
         </ul>
 
         <div class="account">
-            <Link href="">Login</Link>
-            <Link href="">Register</Link>
+            <Link href="/">Login</Link>
+            <ModalLink href="/register">Register</ModalLink>
         </div>
     </header>
 
