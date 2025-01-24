@@ -1,6 +1,6 @@
 import './bootstrap';
 import '../css/app.css';
-import { createApp, h } from 'vue'
+import { createApp } from 'vue'
 import { createInertiaApp } from '@inertiajs/vue3'
 import { renderApp } from '@inertiaui/modal-vue'
 import { Head } from '@inertiajs/vue3'
@@ -17,4 +17,9 @@ createInertiaApp({
             .use(plugin)
             .mount(el)
     },
+    progress: { // progress bar options (when page loads slow)
+        color: '#4B5563',
+        includeCSS: true,
+        showSpinner: true,
+    }
 })

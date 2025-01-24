@@ -27,7 +27,6 @@ class MarkerController extends Controller
                 'lng' => 24.1052,
             ],
         ];
-
         return inertia('home', ['markers' => $markers]);
     }
 }
