@@ -11,7 +11,7 @@
         </ul>
 
         <div id="name">
-            <p>Hello, {{ $page.props.user }}</p>
+            <p>Hello, {{ $page.props.user?.name }}</p>
         </div>
         <div class="account">
             <Link href="">Logout</Link>

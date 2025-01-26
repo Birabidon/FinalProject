@@ -4,6 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
+// https://laravel.com/docs/11.x/migrations
 return new class extends Migration
 {
     /**

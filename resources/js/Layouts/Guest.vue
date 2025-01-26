@@ -1,3 +1,7 @@
+<script setup>
+import { Link } from '@inertiajs/vue3'
+
+</script>
 
 <template>
     <header>
@@ -9,7 +13,7 @@
 
         <div class="account">
             <Link href="/">Login</Link>
-            <ModalLink href="/register">Register</ModalLink>
+            <Link href="/register">Register</Link>
         </div>
     </header>
 
@@ -49,11 +53,7 @@
     </footer>
 </template>
 
-<script setup>
-import { Link } from '@inertiajs/vue3'
-import { ModalLink } from '@inertiaui/modal-vue'
 
-</script>
 
 <!--<script>-->
 <!--import { Link } from '@inertiajs/vue3'-->

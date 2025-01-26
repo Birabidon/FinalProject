@@ -3,52 +3,57 @@
 import { ref } from 'vue'
 import { GoogleMap, Marker, InfoWindow } from 'vue3-google-map'
 import { usePage } from '@inertiajs/vue3'
+import LayoutManager from "@/Layouts/LayoutManager.vue";
 
 const { props } = usePage()
-const markers = ref(props.markers)
-const selectedMarker = ref(null)
-
-const handleMarkerClick = (marker) => {
-    selectedMarker.value = marker
-}
+const user = ref(props.user)
 </script>
 
 <template>
     <Head title="Home"/>
-
-    <component :is="user ? AppLayout : GuestLayout">
+    <p>{{user?.name || 'No user'}}</p>
         <div id="map"></div>
-<!--            <GoogleMap-->
-<!--                api-key="AIzaSyAnlSRXNY5cHoUQ1jCzU526gaRjrDgNgj0"-->
-<!--                style="width: 100%; height: 500px"-->
-<!--                :center="{ lat: 56.9496, lng: 24.1052 }"-->
-<!--                :zoom="10"-->
-<!--            >-->
-<!--                <Marker-->
-<!--                    v-for="(marker, index) in markers"-->
-<!--                    :key="index"-->
-<!--                    :options="{ position: { lat: marker.lat, lng: marker.lng }, title: marker.title }"-->
-<!--                    @click="handleMarkerClick(marker)"-->
-<!--                >-->
-<!--                    <InfoWindow v-if="selectedMarker === marker">-->
-<!--                        <div>{{ marker.title }}</div>-->
-<!--                    </InfoWindow>-->
-<!--                </Marker>-->
-<!--            </GoogleMap>-->
-    </component>
+        <!--            <GoogleMap-->
+        <!--                api-key="AIzaSyAnlSRXNY5cHoUQ1jCzU526gaRjrDgNgj0"-->
+        <!--                style="width: 100%; height: 500px"-->
+        <!--                :center="{ lat: 56.9496, lng: 24.1052 }"-->
+        <!--                :zoom="10"-->
+        <!--            >-->
+        <!--                <Marker-->
+        <!--                    v-for="(marker, index) in markers"-->
+        <!--                    :key="index"-->
+        <!--                    :options="{ position: { lat: marker.lat, lng: marker.lng }, title: marker.title }"-->
+        <!--                    @click="handleMarkerClick(marker)"-->
+        <!--                >-->
+        <!--                    <InfoWindow v-if="selectedMarker === marker">-->
+        <!--                        <div>{{ marker.title }}</div>-->
+        <!--                    </InfoWindow>-->
+        <!--                </Marker>-->
+        <!--            </GoogleMap>-->
 
 </template>
 
 <script>
 import AppLayout from '@/Layouts/App.vue'
 import GuestLayout from '@/Layouts/Guest.vue'
+
 export default {
     components: {
-        AppLayout
+        AppLayout,
+        GuestLayout
     },
     props: {
-        markers: Object,
-        user: String
+        markers: Object
+    },
+    data() {
+        return {
+            selectedMarker: null
+        }
+    },
+    methods: {
+        handleMarkerClick(marker) {
+            this.selectedMarker = marker
+        }
     }
 }
 </script>

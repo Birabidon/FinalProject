@@ -1,20 +1,22 @@
 import './bootstrap';
 import '../css/app.css';
-import { createApp } from 'vue'
+import { createApp, h } from 'vue'
 import { createInertiaApp } from '@inertiajs/vue3'
-import { renderApp } from '@inertiaui/modal-vue'
 import { Head } from '@inertiajs/vue3'
+import LayoutManager from './Layouts/LayoutManager.vue'
 
 createInertiaApp({
     resolve: name => {
         const pages = import.meta.glob('./Pages/**/*.vue', { eager: true })
-        return pages[`./Pages/${name}.vue`] // means it will auto import Vue files, so you don't have to write full path
+        let page = pages[`./Pages/${name}.vue`] // means it will auto import Vue files, so you don't have to write full path
+        page.default.layout = page.default.layout || LayoutManager // set the page layout to Layout if a layout has not already been set for that page.
+        return page
     },
     title: title => `${title} | MyProject`,
     setup({ el, App, props, plugin }) {
-        createApp({ render: renderApp(App, props) })
-            .component('Head', Head)
+        createApp({ render: () => h(App, props) })
             .use(plugin)
+            .component('Head', Head)
             .mount(el)
     },
     progress: { // progress bar options (when page loads slow)
