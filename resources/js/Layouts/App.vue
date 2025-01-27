@@ -14,7 +14,13 @@
             <p>Hello, {{ $page.props.user?.name }}</p>
         </div>
         <div class="account">
-            <Link href="/register">Logout</Link>
+            <Link
+                href="/logout"
+                method="POST"
+                as="button"
+                type="button"
+            >Logout
+            </Link> <!-- as button is neaded bc link can be opened in a new tab -->
         </div>
     </header>
 

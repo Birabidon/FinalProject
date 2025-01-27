@@ -42,4 +42,15 @@ class AuthController extends Controller
             'email' => 'The provided credentials do not match our records.',
         ])->onlyInput('email');
     }
+
+    public function logout(Request $request){
+        Auth::logout();
+
+        $request->session()->invalidate(); // Destroy the whole session
+
+        $request->session()->regenerateToken(); // Regenerate the CSRF token
+
+        return redirect('/');
+    }
+
 }

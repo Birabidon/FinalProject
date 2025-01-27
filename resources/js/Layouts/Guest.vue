@@ -12,8 +12,8 @@ import { Link } from '@inertiajs/vue3'
         </ul>
 
         <div class="account">
-            <Link href="/login">Login</Link>
-            <Link href="/register">Register</Link>
+            <Link href="/login" :class="{'active': $page.component === 'Auth/Login'}">Login</Link>
+            <Link href="/register" :class="{'active': $page.component === 'Auth/Register'}">Register</Link>
         </div>
     </header>
 
