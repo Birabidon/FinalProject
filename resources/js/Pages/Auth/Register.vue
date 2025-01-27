@@ -1,6 +1,7 @@
 <script setup>
     // https://www.youtube.com/watch?v=_GygbuxiEnA&list=PL38wFHH4qYZXCW2rlBLNdHi5cv-v_qlXO&index=11&ab_channel=LearnwithJon
     import { useForm } from '@inertiajs/vue3'; // useForm is for handling form submission
+    import TextInput from '@/Components/TextInput.vue'; // import TextInput custom component
 
 
     // https://inertiajs.com/forms
@@ -20,29 +21,23 @@
 
 
 <template>
-    <div class="modal">
-        <h1>Register a new account</h1>
+    <Head title="Register"/>
 
+    <h1 class="title">Register a new account</h1>
+
+    <div class="w-2/4 mx-auto">
         <form @submit.prevent="submit">
-            <label for="name">Name</label>
-            <input type="text" v-model="form.name" name="name" placeholder="Enter your name">
-            <small>{{ form.errors.name }}</small>
+            <TextInput name="name" v-model="form.name" :message="form.errors.name"/>
 
-            <label for="email">Email</label>
-            <input type="text" v-model="form.email" name="email" placeholder="Enter your email">
-            <small>{{ form.errors.email }}</small>
+            <TextInput name="email" type="email" v-model="form.email" :message="form.errors.email"/>
 
-            <label for="password">Password</label>
-            <input type="password" v-model="form.password" name="password" placeholder="Enter your password">
-            <small>{{ form.errors.password }}</small>
+            <TextInput name="password" type="password" v-model="form.password" :message="form.errors.password"/>
 
-            <label for="password">Confirm Password</label>
-            <input type="password" v-model="form.password_confirmation" name="password_confirm" placeholder="Confirm your password">
+            <TextInput name="Confirm Password" type="password" v-model="form.password_confirmation"/>
 
-            <button type="submit" :disabled="form.processing">Register</button>
+            <p class="text-slate-600 mb-2">Already a user? <a href="/login" class="text-link">Login</a></p>
+            <button type="submit" class="primary-btn" :disabled="form.processing">Register</button>
         </form>
     </div>
 </template>
 
-<script>
-</script>

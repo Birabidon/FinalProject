@@ -14,7 +14,7 @@
             <p>Hello, {{ $page.props.user?.name }}</p>
         </div>
         <div class="account">
-            <Link href="">Logout</Link>
+            <Link href="/register">Logout</Link>
         </div>
     </header>
 

@@ -12,7 +12,7 @@ import { Link } from '@inertiajs/vue3'
         </ul>
 
         <div class="account">
-            <Link href="/">Login</Link>
+            <Link href="/login">Login</Link>
             <Link href="/register">Register</Link>
         </div>
     </header>
