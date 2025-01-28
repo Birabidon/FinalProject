@@ -10,13 +10,20 @@
         email: null,
         password: null,
         password_confirmation: null, // laravel convention to auto match password and confirm password
+        avatar: null,
+        preview: null,
     })
+    const change = (e) => {
+        form.avatar = e.target.files[0]; // get the first file from the file input
+        form.preview = URL.createObjectURL(form.avatar); // create a url for the file
+    }
 
     const submit = () => {
         form.post("/register", {
             onError: () => form.reset('password', 'password_confirmation'), // reset passwords if there is an error
         })
     };
+
 </script>
 
 
@@ -27,6 +34,18 @@
 
     <div class="w-2/4 mx-auto">
         <form @submit.prevent="submit">
+            <div class="grid place-items-center">
+                <div class="relative w-28 h-28 rounded-full overflow-hidden border border-slate-300  bg-gray-100">
+                    <label class="absolute inset-0 grid content-end cursor-pointer" for="avatar">
+                        <span class="bg-white/70 pb-2 text-center">Avatar</span>
+                    </label>
+                    <input type="file" id="avatar" @input="change" hidden>
+
+                    <img :src="form.preview ?? 'storage/avatars/default.jpg'" alt="preview">
+                </div>
+
+                <p class="error mt-2">{{ form.errors.avatar}}</p>
+            </div>
             <TextInput name="name" v-model="form.name" :message="form.errors.name"/>
 
             <TextInput name="email" type="email" v-model="form.email" :message="form.errors.email"/>

@@ -11,9 +11,13 @@
         </ul>
 
         <div id="name">
-            <p>Hello, {{ $page.props.user?.name }}</p>
+            <p>Hello, {{ $page.props.auth.user?.name }}</p>
         </div>
-        <div class="account">
+        <div class="account space-x-6 flex">
+            <img
+                :src="$page.props.auth.user?.avatar ? ('storage/' + $page.props.auth.user?.avatar) : ('/storage/avatars/default.jpg')"
+                alt="avatar"
+               class="avatar"> <!--  point to the public folder, so avatar folder must have symbolic link to public folder: php artisan storage:link-->
             <Link
                 href="/logout"
                 method="POST"

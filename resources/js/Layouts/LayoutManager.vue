@@ -1,5 +1,5 @@
 <template>
-    <component :is="$page.props.user ? 'AppLayout' : 'GuestLayout'">
+    <component :is="$page.props.auth.user ? 'AppLayout' : 'GuestLayout'">
         <slot />
     </component>
 </template>
@@ -13,9 +13,6 @@ export default {
         AppLayout,
         GuestLayout
     },
-    props: {
-        user: Object,
-    }
 }
 </script>
 

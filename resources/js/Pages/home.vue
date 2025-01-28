@@ -6,12 +6,11 @@ import { usePage } from '@inertiajs/vue3'
 import LayoutManager from "@/Layouts/LayoutManager.vue";
 
 const { props } = usePage()
-const user = ref(props.user)
 </script>
 
 <template>
     <Head title="Home"/>
-    <p>{{user?.name || 'No user'}}</p>
+    <p>{{$page.props.auth.user?.name || 'No user'}}</p>
         <div id="map"></div>
         <!--            <GoogleMap-->
         <!--                api-key="AIzaSyAnlSRXNY5cHoUQ1jCzU526gaRjrDgNgj0"-->
