@@ -1,5 +1,22 @@
 <script setup>
-
+// To run your project on another PC using Git, follow these steps:
+//     Clone the Repository: Clone the repository to your local machine.
+//     git clone git@github.com:Birabidon/FinalProject.git
+// cd FinalProject
+// Install Dependencies: Install the necessary dependencies using Composer and npm.
+//     composer install
+// npm install
+// Environment Configuration: Copy the .env.example file to .env and configure it with your environment settings.
+//     cp .env.example .env
+// Generate Application Key: Generate the application key for Laravel.
+//                                                                php artisan key:generate
+// Run Migrations: Run the database migrations to set up your database schema.
+//     php artisan migrate
+// Build Frontend Assets: Compile the frontend assets using npm.
+// npm run dev
+// Serve the Application: Start the Laravel development server.
+//     php artisan serve
+// By following these steps, you should be able to run the project on another PC. Make sure to configure your .env file with the correct database and other environment settings.
 </script>
 
 <template>

@@ -30,7 +30,7 @@ class AuthController extends Controller
         Auth::login($user);
 
         // Redirect
-        return redirect('/');
+        return redirect('/')->with('message', 'Welcome to our site!');
     }
 
     public function login(Request $request){

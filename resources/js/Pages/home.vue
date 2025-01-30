@@ -9,6 +9,7 @@ const { props } = usePage()
 </script>
 
 <template>
+    <p class="p-4 bg-green-200" v-if="$page.props.flash.message">{{ $page.props.flash.message }}</p>
     <Head title="Home"/>
     <p>{{$page.props.auth.user?.name || 'No user'}}</p>
         <div id="map"></div>

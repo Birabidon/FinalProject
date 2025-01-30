@@ -1,9 +1,11 @@
 <?php
 
+use App\Models\User;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [\App\Http\Controllers\MarkerController::class, 'index']);
 Route::inertia('/about', 'about');
+Route::inertia('/users', 'UsersList', ['users' => User::paginate(5)]);
 
 Route::middleware('auth')->group(function () {
     Route::post('/logout ', [\App\Http\Controllers\AuthController::class, 'logout']);

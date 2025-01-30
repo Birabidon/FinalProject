@@ -39,6 +39,11 @@ class HandleInertiaRequests extends Middleware
             'auth.user' => fn () => $request->user()
                 ? $request->user()->only('id', 'name', 'email', 'avatar')
                 : null, // if user is not logged in, return null
+            'flash' => [
+                'message' => fn () => $request->session()->get('message'), // gets message from
+                //  return redirect('/')->with('greet', 'Welcome to our site!'); in AuthController,
+                // and then I can use it in my homePage to say that registration was successful ($page.props.flash.greet)
+            ],
         ]);
     }
 }

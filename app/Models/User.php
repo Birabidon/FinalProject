@@ -29,7 +29,7 @@ class User extends Authenticatable
      *
      * @var list<string>
      */
-    protected $hidden = [
+    protected $hidden = [ // for example User::all() will not return password and remember_token
         'password',
         'remember_token',
     ];
