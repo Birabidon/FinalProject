@@ -1,9 +1,23 @@
 <script setup>
-import { Link } from '@inertiajs/vue3'
+import { Link, router } from '@inertiajs/vue3'
+import { throttle, debounce } from 'lodash'; // throttle - invokes this function only once in 1 second, so it doesn't make a request on every key stroke
+import { ref, watch } from 'vue'
 
-defineProps({
+const props = defineProps({
     users: Object,
+    searchTerm: String,
+    can: Object
 })
+
+const search = ref(props.searchTerm);
+
+watch(search, debounce( // debounce - waits for 0.5 second after the last key stroke
+    (value) => router.get('/users', { search: value }, { preserveState: true }),
+    500
+));
+
+// (value) => router.get('/users', { search: value }, { preserveState: true })); // preserveState: true - to keep the search value in the input field)
+// // when search changes makes a get request to the same page with the search query (http://127.0.0.1:8000/users?search=aleks)
 
 const getDate = (date) =>
     new Date(date).toLocaleDateString("en-us", {
@@ -14,7 +28,16 @@ const getDate = (date) =>
 </script>
 
 <template>
+    <Head title="UserList"/>
     <div>
+        <div>
+            <div class="flex justify-end mb-4">
+                <div class="w-1/4">
+                    <input type="search" placeholder="Search" v-model="search"/>
+                </div>
+
+            </div>
+        </div>
         <table>
 
             <thead>
@@ -23,6 +46,7 @@ const getDate = (date) =>
                     <th>Name</th>
                     <th>Email</th>
                     <th>Registration Date</th>
+                    <th v-if="can.delete_user">Delete</th>
                 </tr>
             </thead>
 
@@ -34,6 +58,9 @@ const getDate = (date) =>
                     <td>{{ user.name }}</td>
                     <td>{{ user.email }}</td>
                     <td>{{ getDate(user.created_at) }}</td>
+                    <td v-if="can.delete_user">
+                        <button class="bg-red-500 w-6 h-6 rounded-full"></button>
+                    </td>
                 </tr>
             </tbody>
         </table>
