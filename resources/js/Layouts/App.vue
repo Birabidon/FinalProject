@@ -17,6 +17,8 @@
 // Serve the Application: Start the Laravel development server.
 //     php artisan serve
 // By following these steps, you should be able to run the project on another PC. Make sure to configure your .env file with the correct database and other environment settings.
+// php artisan storage:link
+//
 </script>
 
 <template>

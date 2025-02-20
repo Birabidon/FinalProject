@@ -1,9 +1,8 @@
 <script setup>
 // https://www.npmjs.com/package/vue3-google-map#installation google maps vue 3
 import { ref } from 'vue'
-import { GoogleMap, Marker, InfoWindow } from 'vue3-google-map'
+import { GoogleMap, AdvancedMarker, InfoWindow } from 'vue3-google-map'
 import { usePage } from '@inertiajs/vue3'
-import LayoutManager from "@/Layouts/LayoutManager.vue";
 
 const { props } = usePage()
 </script>
@@ -11,25 +10,30 @@ const { props } = usePage()
 <template>
     <p class="p-4 bg-green-200" v-if="$page.props.flash.message">{{ $page.props.flash.message }}</p>
     <Head title="Home"/>
-    <p>{{$page.props.auth.user?.name || 'No user'}}</p>
-        <div id="map"></div>
-        <!--            <GoogleMap-->
-        <!--                api-key="AIzaSyAnlSRXNY5cHoUQ1jCzU526gaRjrDgNgj0"-->
-        <!--                style="width: 100%; height: 500px"-->
-        <!--                :center="{ lat: 56.9496, lng: 24.1052 }"-->
-        <!--                :zoom="10"-->
-        <!--            >-->
-        <!--                <Marker-->
-        <!--                    v-for="(marker, index) in markers"-->
-        <!--                    :key="index"-->
-        <!--                    :options="{ position: { lat: marker.lat, lng: marker.lng }, title: marker.title }"-->
-        <!--                    @click="handleMarkerClick(marker)"-->
-        <!--                >-->
-        <!--                    <InfoWindow v-if="selectedMarker === marker">-->
-        <!--                        <div>{{ marker.title }}</div>-->
-        <!--                    </InfoWindow>-->
-        <!--                </Marker>-->
-        <!--            </GoogleMap>-->
+    <div id="map"></div>
+    <GoogleMap
+        api-key="AIzaSyAnlSRXNY5cHoUQ1jCzU526gaRjrDgNgj0"
+        style="width: 100%; height: 100vh"
+        :center="{ lat: 56.9496, lng: 24.1052 }"
+        :zoom="10"
+        mapId="7d2f8294b343021c"
+        :disableDoubleClickZoom="true"
+        @dblclick="handleMapDBClick"
+    >
+        <AdvancedMarker
+            v-for="(marker, index) in markers"
+            :key="index"
+            :options="{ position: { lat: marker.lat, lng: marker.lng }, title: marker.title }"
+        >
+            <InfoWindow>
+                <div>{{ marker.title }}</div>
+            </InfoWindow>
+        </AdvancedMarker>
+        <AdvancedMarker
+            v-if="temporaryMarker"
+            :options="{ position: { lat: temporaryMarker.lat, lng: temporaryMarker.lng }, title: temporaryMarker.title }"
+        />
+    </GoogleMap>
 
 </template>
 
@@ -47,12 +51,20 @@ export default {
     },
     data() {
         return {
-            selectedMarker: null
+            selectedMarker: null,
+            temporaryMarker: null
         }
     },
     methods: {
         handleMarkerClick(marker) {
             this.selectedMarker = marker
+        },
+        handleMapDBClick(e) {
+            const lat = e.latLng.lat()
+            const lng = e.latLng.lng()
+            console.log('Map clicked', lat, lng)
+            this.temporaryMarker = { lat, lng, title: `Marker at (${lat}, ${lng})` }
+            this.selectedMarker = null
         }
     }
 }

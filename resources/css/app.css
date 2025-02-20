@@ -41,7 +41,8 @@ header .account a {
 }
 main {
     background-color: #d5d2d2;
-    min-height: calc(100vh - 40px)
+    min-height: calc(100vh - 40px);
+    padding: 0;
 }
  footer {
      background-color: #4e6e2e;
@@ -136,9 +137,6 @@ main {
     }
     nav {
         @apply p-5 max-w-screen-lg mx-auto flex items-center justify-between;
-    }
-    main {
-        @apply max-w-screen-lg mx-auto;
     }
     .primary-btn {
         @apply flex w-full justify-center rounded-md bg-blue-500 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-blue-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:bg-slate-400 disabled:cursor-wait;
