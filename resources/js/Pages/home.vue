@@ -11,6 +11,8 @@ const { props } = usePage()
     <p class="p-4 bg-green-200" v-if="$page.props.flash.message">{{ $page.props.flash.message }}</p>
     <Head title="Home"/>
     <div id="map"></div>
+    
+    <!-- mapTypeId="satellite" -->
     <GoogleMap
         api-key="AIzaSyAnlSRXNY5cHoUQ1jCzU526gaRjrDgNgj0"
         style="width: 100%; height: 100vh"
