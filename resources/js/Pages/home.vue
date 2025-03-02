@@ -5,16 +5,17 @@ import { GoogleMap, AdvancedMarker, InfoWindow } from 'vue3-google-map'
 import { usePage } from '@inertiajs/vue3'
 
 const { props } = usePage()
+const apiKey = import.meta.env.GOOGLE_MAPS_API_KEY
 </script>
 
 <template>
     <p class="p-4 bg-green-200" v-if="$page.props.flash.message">{{ $page.props.flash.message }}</p>
     <Head title="Home"/>
     <div id="map"></div>
-    
+
     <!-- mapTypeId="satellite" -->
     <GoogleMap
-        api-key="AIzaSyAnlSRXNY5cHoUQ1jCzU526gaRjrDgNgj0"
+        :api-key="apiKey"
         style="width: 100%; height: 100vh"
         :center="{ lat: 56.9496, lng: 24.1052 }"
         :zoom="10"
