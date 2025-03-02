@@ -5,7 +5,7 @@ import { GoogleMap, AdvancedMarker, InfoWindow } from 'vue3-google-map'
 import { usePage } from '@inertiajs/vue3'
 
 const { props } = usePage()
-const apiKey = import.meta.env.GOOGLE_MAPS_API_KEY
+const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY
 </script>
 
 <template>
