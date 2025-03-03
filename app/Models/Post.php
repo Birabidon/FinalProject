@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Post extends Model
 {
     use SoftDeletes;
-
+    // php artisan make:model Post -a
     protected $fillable = [
         'title',
         'content',

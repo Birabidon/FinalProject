@@ -64,15 +64,13 @@ export default {
     },
     data() {
         return {
-            selectedMarker: null,
             temporaryMarker: null,
-            alwaysOpen: true
+            alwaysOpen: true,
         }
     },
     methods: {
         handleMapClick(e) {
             this.temporaryMarker = null
-            console.log(this.alwaysOpen)
         },
         handleMapDBClick(e) {
             const lat = e.latLng.lat()
@@ -80,7 +78,6 @@ export default {
             console.log('Map clicked', lat, lng)
             this.temporaryMarker = { lat, lng, title: `Marker at (${lat}, ${lng})` }
             this.alwaysOpen = true
-            this.selectedMarker = null
         }
     }
 }

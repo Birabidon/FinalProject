@@ -1,11 +1,11 @@
 <script>
 export default {
-    name: "CreateLocation"
+    name: "index"
 }
 </script>
 
 <template>
-
+    <p>SOmething</p>
 </template>
 
 <style scoped>

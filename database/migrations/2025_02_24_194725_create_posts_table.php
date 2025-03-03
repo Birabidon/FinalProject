@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('posts', function (Blueprint $table) {
             $table->id();
             $table->foreignId('created_by')->constrained('users')->onDelete('cascade');
-            $table->foreignId('updated_by')->constrained('users')->onDelete('cascade');
-            $table->foreignId('deleted_by')->nullable()->constrained('users')->onDelete('cascade');
+            $table->foreignId('updated_by')->constrained('users');
+            $table->foreignId('deleted_by')->nullable()->constrained('users');
             $table->foreignId('located_at')->constrained('locations')->onDelete('cascade');
             $table->string('title');
             $table->longtext('content');
