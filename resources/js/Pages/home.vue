@@ -40,8 +40,12 @@ const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY
                 :options="{ position: { lat: temporaryMarker.lat, lng: temporaryMarker.lng }, title: temporaryMarker.title }"
             >
                 <InfoWindow v-model="alwaysOpen">
-                    <div v-if="$page.props.auth.user">To create new Marker/Place click <Link href="/" style="color: blue">here</Link></div>
-                    <div v-else>To create new Marker, you should <Link href="/login" style="color: blue">login</Link></div>
+                    <div v-if="$page.props.auth.user">
+                        To create new Marker/Place click <Link href="/locations/create" :data="{ lat: temporaryMarker.lat, lng: temporaryMarker.lng }" style="color: blue">here</Link>
+                    </div>
+                    <div v-else>
+                        To create new Marker, you should <Link href="/login" style="color: blue">login</Link>
+                    </div>
                 </InfoWindow>
             </AdvancedMarker>
         </GoogleMap>
@@ -70,14 +74,15 @@ export default {
     },
     methods: {
         handleMapClick(e) {
+            console.log('Temp mark before' + this.temporaryMarker.lng)
             this.temporaryMarker = null
         },
         handleMapDBClick(e) {
             const lat = e.latLng.lat()
             const lng = e.latLng.lng()
-            console.log('Map clicked', lat, lng)
             this.temporaryMarker = { lat, lng, title: `Marker at (${lat}, ${lng})` }
             this.alwaysOpen = true
+            console.log('Temp mark create' + this.temporaryMarker)
         }
     }
 }

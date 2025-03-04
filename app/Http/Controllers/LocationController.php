@@ -15,8 +15,11 @@ class LocationController extends Controller
     /**
      *  Show the form for creating a new resource.
      */
-    public function create(){
-        return inertia('Location/Create');
+    public function create(Request $request){
+        return inertia('Location/Create', [
+            'lat' => (float)$request->lat,
+            'lng' => (float)$request->lng
+        ]);
     }
 
     public function store(Request $request){
