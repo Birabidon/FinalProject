@@ -23,7 +23,19 @@ class LocationController extends Controller
     }
 
     public function store(Request $request){
+        $fields = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'lat' => ['required', 'numeric'],
+            'lng' => ['required', 'numeric'],
+        ]);
 
+        Location::create([
+            'name' => $fields['name'],
+            'latitude' => $fields['lat'],
+            'longitude' => $fields['lng']
+        ]);
+
+        return redirect()->route('home')->withMessage('Location created successfully');
     }
 
     public function show(Location $location){

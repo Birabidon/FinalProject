@@ -21,16 +21,14 @@ const form = useForm({
 })
 
 const submit = () => {
-    form.post("/locations", {
-        onSuccess: () => form.reset(),
-    })
+    form.post("/locations")
 }
 </script>
 
 <template>
     <div>
         <h2>Create a new location</h2>
-        <form submit.prevent="submit">
+        <form @submit.prevent="submit">
             <TextInput name="Location name" v-model="form.name" :message="form.errors.name"/>
             <TextInput name="Latitude" v-model="form.lat" :message="form.errors.lat"/>
             <TextInput name="Longitude" v-model="form.lng" :message="form.errors.lng"/>

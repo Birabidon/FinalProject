@@ -74,7 +74,6 @@ export default {
     },
     methods: {
         handleMapClick(e) {
-            console.log('Temp mark before' + this.temporaryMarker.lng)
             this.temporaryMarker = null
         },
         handleMapDBClick(e) {

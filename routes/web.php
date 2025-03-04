@@ -6,8 +6,8 @@ use App\Models\User;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 
-Route::get('/', [\App\Http\Controllers\MarkerController::class, 'index']);
-Route::inertia('/about', 'about');
+Route::get('/', [\App\Http\Controllers\MarkerController::class, 'index'])->name('home');
+Route::inertia('/about', 'about')->name('about');
 
 Route::get('/users', function (Request $request) {
     return inertia('UsersList', [
@@ -25,18 +25,18 @@ Route::get('/users', function (Request $request) {
                 null
         ]
     ]);
-});
+})->name('users.index');
 
 Route::middleware('auth')->group(function () {
-    Route::post('/logout ', [AuthController::class, 'logout']);
+    Route::post('/logout ', [AuthController::class, 'logout'])->name('users.logout');
     Route::resource('locations', LocationController::class);
 });
 
 Route::middleware('guest')->group(function () {
-    Route::inertia('/register', 'Auth/Register');
+    Route::inertia('/register', 'Auth/Register')->name('users.register');
     Route::post('/register', [\App\Http\Controllers\AuthController::class, 'register']);
 
-    Route::inertia('/login', 'Auth/Login');
+    Route::inertia('/login', 'Auth/Login')->name('users.login');
     Route::post('/login ', [\App\Http\Controllers\AuthController::class, 'login']);
 
 });
