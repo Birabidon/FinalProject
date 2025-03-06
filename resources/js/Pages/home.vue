@@ -19,7 +19,7 @@ const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY
     <div @click="handleMapClick">
         <GoogleMap
             :api-key="apiKey"
-            style="width: 100%; height: 100vh"
+            style="width: 100%; height: 90vh"
             :center="{ lat: 56.9496, lng: 24.1052 }"
             :zoom="10"
             mapId="7d2f8294b343021c"
@@ -64,7 +64,7 @@ export default {
         GuestLayout
     },
     props: {
-        markers: Object
+        markers: Array
     },
     data() {
         return {
