@@ -6,7 +6,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 
-Route::get('/', [\App\Http\Controllers\MarkerController::class, 'getAllMarkers'])->name('home');
+Route::get('/', [\App\Http\Controllers\LocationController::class, 'getAllMarkers'])->name('home');
 Route::inertia('/about', 'about')->name('about');
 
 Route::get('/users', function (Request $request) {

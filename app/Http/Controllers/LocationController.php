@@ -7,6 +7,13 @@ use App\Models\Location;
 
 class LocationController extends Controller
 {
+    public function getAllMarkers()
+    {
+        $markers = Location::all();
+
+        return inertia('home', ['markers' => $markers]);
+    }
+
     public function index()
     {
         $markers = Location::all();
