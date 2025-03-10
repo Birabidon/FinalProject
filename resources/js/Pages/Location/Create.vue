@@ -4,9 +4,7 @@ import {useForm} from "@inertiajs/vue3";
 import {defineProps} from "vue";
 
 const props = defineProps({
-    title: {
-        type: String,
-    },
+    title: String
     lat: {
         type: Number,
         required: true
@@ -17,8 +15,10 @@ const props = defineProps({
     }
 })
 
+console.log(props.title) // Error This is undefined!!! FIX IT FUTURE NIKITA
+
 const form = useForm({
-    title: null,
+    title: props.title,
     lat: props.lat,
     lng: props.lng,
 })

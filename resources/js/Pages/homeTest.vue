@@ -1,14 +1,20 @@
 <script setup>
 // https://www.npmjs.com/package/vue3-google-map#installation google maps vue 3
-import { ref, onMounted, watch } from 'vue'
+import { ref, onMounted, watch, defineProps } from 'vue'
 import { GoogleMap, AdvancedMarker, InfoWindow } from 'vue3-google-map'
 import { usePage, Link } from '@inertiajs/vue3'
 
-const { props } = usePage()
+const props = defineProps({
+    markers: Array
+})
+
+const markers = props.markers
+
 const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY
 
 const mapRef = ref(null)
 const googleApi = ref(null)
+let getPlaceName = null
 
 watch(() => mapRef.value?.ready, (ready) => {
     if (!ready) return
@@ -17,7 +23,7 @@ watch(() => mapRef.value?.ready, (ready) => {
 
     const geocoder = new googleApi.value.Geocoder()
 
-    const getPlaceName = (latlng, marker) => {
+    getPlaceName = (latlng, marker) => {
         geocoder.geocode({ location: latlng }, (results, status) => {
             if (status === 'OK') {
                 if (results[0]) {
@@ -31,10 +37,32 @@ watch(() => mapRef.value?.ready, (ready) => {
         })
     }
 
-    props.markers.forEach(marker => {
+    markers.forEach(marker => {
         getPlaceName({ lat: marker.lat, lng: marker.lng }, marker)
     })
 })
+
+
+const temporaryMarker = ref(null)
+const alwaysOpen = ref(true)
+
+const handleMapClick = (e) => {
+    temporaryMarker.value = null
+}
+
+const handleMapDBClick = (e) => {
+    const lat = e.latLng.lat()
+    const lng = e.latLng.lng()
+    temporaryMarker.value = { lat, lng, title: `Marker at (${lat}, ${lng})` }
+
+    if (getPlaceName){
+        getPlaceName({ lat, lng }, temporaryMarker.value)
+    }
+
+    alwaysOpen.value = true
+    console.log('Temp mark create' + temporaryMarker.value)
+}
+
 </script>
 
 <template>
@@ -59,7 +87,7 @@ watch(() => mapRef.value?.ready, (ready) => {
             <AdvancedMarker
                 v-for="(marker, index) in markers"
                 :key="index"
-                :options="{ position: { lat: marker.lat, lng: marker.lng }, title: marker.title }"
+                :options="{ position: { lat: marker.lat, lng: marker.lng } }"
             >
                 <InfoWindow>
                     <div>
@@ -74,11 +102,19 @@ watch(() => mapRef.value?.ready, (ready) => {
                 :options="{ position: { lat: temporaryMarker.lat, lng: temporaryMarker.lng }, title: temporaryMarker.title }"
             >
                 <InfoWindow v-model="alwaysOpen">
-                    <div v-if="$page.props.auth.user">
-                        To create new Marker/Place click <Link href="/locations/create" :data="{ lat: temporaryMarker.lat, lng: temporaryMarker.lng }" style="color: blue">here</Link>
+                    <div v-if="temporaryMarker.LocationName">
+                        <div>
+                            {{ temporaryMarker.LocationName}}}
+                        </div>
+                        <div v-if="$page.props.auth.user">
+                            To create new Marker/Place click <Link href="/locations/create" :data="{ title: 'locat', lat: temporaryMarker.lat, lng: temporaryMarker.lng }" style="color: blue">here</Link>
+                        </div>
+                        <div v-else>
+                            To create new Marker, you should <Link href="/login" style="color: blue">login</Link>
+                        </div>
                     </div>
                     <div v-else>
-                        To create new Marker, you should <Link href="/login" style="color: blue">login</Link>
+                        Loading...
                     </div>
                 </InfoWindow>
             </AdvancedMarker>
@@ -88,34 +124,6 @@ watch(() => mapRef.value?.ready, (ready) => {
 
 </template>
 
-<script>
-import AppLayout from '@/Layouts/App.vue'
-import GuestLayout from '@/Layouts/Guest.vue'
-
-export default {
-    props: {
-        markers: Array
-    },
-    data() {
-        return {
-            temporaryMarker: null,
-            alwaysOpen: true,
-        }
-    },
-    methods: {
-        handleMapClick(e) {
-            this.temporaryMarker = null
-        },
-        handleMapDBClick(e) {
-            const lat = e.latLng.lat()
-            const lng = e.latLng.lng()
-            this.temporaryMarker = { lat, lng, title: `Marker at (${lat}, ${lng})` }
-            this.alwaysOpen = true
-            console.log('Temp mark create' + this.temporaryMarker)
-        }
-    }
-}
-</script>
 <style scoped>
 
 </style>
