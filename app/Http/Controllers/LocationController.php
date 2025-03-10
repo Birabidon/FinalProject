@@ -11,7 +11,7 @@ class LocationController extends Controller
     {
         $markers = Location::all();
 
-        return inertia('home', ['markers' => $markers]);
+        return inertia('homeTest', ['markers' => $markers]);
     }
 
     public function index()

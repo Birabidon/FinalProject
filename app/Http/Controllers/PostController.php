@@ -12,7 +12,9 @@ class PostController extends Controller
      */
     public function index()
     {
-        //
+        $posts = Post::query()->paginate(10);
+
+        return inertia('Posts/Index', ['posts' => $posts]);
     }
 
     public function indexWithLocation()
