@@ -1,6 +1,7 @@
 <script setup>
 import TextInput from "@/Components/TextInput.vue";
 import {useForm} from "@inertiajs/vue3";
+import GoogleMapComponent from "@/Components/GoogleMapOneMarkerComponent.vue";
 import {defineProps} from "vue";
 
 const props = defineProps({
@@ -45,6 +46,9 @@ const submit = () => {
             </textarea>
             <button type="submit" :disabled="form.processing">Create</button>
         </form>
+
+
+        <GoogleMapComponent :marker="{ lat: props.lat, lng: props.lng }"></GoogleMapComponent>
     </div>
 </template>
 

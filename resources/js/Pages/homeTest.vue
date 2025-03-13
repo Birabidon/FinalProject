@@ -107,7 +107,7 @@ const handleMapDBClick = (e) => {
                             {{ temporaryMarker.LocationName}}}
                         </div>
                         <div v-if="$page.props.auth.user">
-                            To create new Marker/Place click <Link href="/locations/create" :data="{ title: temporaryMarker.LocationName, lat: temporaryMarker.lat, lng: temporaryMarker.lng }" style="color: blue">here</Link>
+                            To create new Marker/Place click <Link href="/posts/create" :data="{ location: temporaryMarker.LocationName,lat: temporaryMarker.lat, lng: temporaryMarker.lng }" style="color: blue">here</Link>
                         </div>
                         <div v-else>
                             To create new Marker, you should <Link href="/login" style="color: blue">login</Link>

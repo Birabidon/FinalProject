@@ -26,9 +26,19 @@ class PostController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Request $request)
     {
-        return inertia('Post/Create');
+        $fields = $request->validate([
+            'location' => ['required', 'string', 'max:255'],
+            'lat' => ['required', 'numeric'],
+            'lng' => ['required', 'numeric'],
+        ]);
+
+        return inertia('Post/Create', [
+            'location' => $fields['location'],
+            'lat' => (float)$fields['lat'],
+            'lng' => (float)$fields['lng']
+        ]);
     }
 
     /**

@@ -24,6 +24,12 @@ class LocationController extends Controller
      *  Show the form for creating a new resource.
      */
     public function create(Request $request){
+        $fields = $request->validate([
+            'location' => ['required', 'string', 'max:255'],
+            'lat' => ['required', 'numeric'],
+            'lng' => ['required', 'numeric'],
+        ]);
+
         return inertia('Location/Create', [
             'lat' => (float)$request->lat,
             'lng' => (float)$request->lng
