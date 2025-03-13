@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\LocationController;
+use App\Http\Controllers\PostController;
 use App\Models\User;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
@@ -30,6 +31,7 @@ Route::get('/users', function (Request $request) {
 Route::middleware('auth')->group(function () {
     Route::post('/logout ', [AuthController::class, 'logout'])->name('users.logout');
     Route::resource('locations', LocationController::class);
+    Route::resource('posts', PostController::class);
 });
 
 Route::middleware('guest')->group(function () {

@@ -4,7 +4,7 @@ import {useForm} from "@inertiajs/vue3";
 import {defineProps} from "vue";
 
 const props = defineProps({
-    title: String
+    title: String,
     lat: {
         type: Number,
         required: true

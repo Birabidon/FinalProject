@@ -16,10 +16,12 @@ return new class extends Migration
             $table->foreignId('created_by')->constrained('users')->onDelete('cascade');
             $table->foreignId('updated_by')->constrained('users');
             $table->foreignId('deleted_by')->nullable()->constrained('users');
-            $table->foreignId('located_at')->constrained('locations')->onDelete('cascade');
+//            $table->foreignId('located_at')->constrained('locations')->onDelete('cascade');  // later
             $table->string('title');
             $table->longtext('content');
             $table->integer('rating')->default(0);
+            $table->float('lat');
+            $table->float('lng');
             $table->timestamp('deleted_at')->nullable();
             $table->timestamps();
         });

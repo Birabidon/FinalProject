@@ -19,7 +19,7 @@ defineProps({
 
 <template>
     <div class="mb-6">
-        <label for="">{{ name }}</label>
+        <label>{{ name }}</label>
         <input :type="type" v-model="model" :class="{'!ring-red-500' : message}">
         <small class="error" v-if="message">{{ message }}</small>
     </div>
