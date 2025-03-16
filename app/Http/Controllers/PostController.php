@@ -46,7 +46,20 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $fields = $request->validate([
+            'title' => ['required', 'string', 'max:255'],
+            'content' => ['required', 'string'],
+            'lat' => ['required', 'numeric'],
+            'lng' => ['required', 'numeric'],
+            'location' => ['required', 'string', 'max:255'],
+        ]);
+
+        $fields['created_by'] = auth()->id();
+        $fields['updated_by'] = auth()->id();
+
+        Post::create($fields);
+
+        return redirect()->route('home')->withMessage('Post created successfully');
     }
 
     /**

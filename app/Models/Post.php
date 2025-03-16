@@ -12,7 +12,9 @@ class Post extends Model
     protected $fillable = [
         'title',
         'content',
-        'rating',
+        'lat',
+        'lng',
+        'location',
         'created_by',
         'updated_by',
         'deleted_by',

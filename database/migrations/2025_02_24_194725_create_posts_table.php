@@ -19,9 +19,9 @@ return new class extends Migration
 //            $table->foreignId('located_at')->constrained('locations')->onDelete('cascade');  // later
             $table->string('title');
             $table->longtext('content');
-            $table->integer('rating')->default(0);
             $table->float('lat');
             $table->float('lng');
+            $table->string('location');
             $table->timestamp('deleted_at')->nullable();
             $table->timestamps();
         });

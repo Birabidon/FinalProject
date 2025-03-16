@@ -4,12 +4,29 @@ import { defineProps } from 'vue'
 import { GoogleMap, AdvancedMarker, InfoWindow } from 'vue3-google-map'
 
 const props = defineProps({
-    marker: Object
+    marker: {
+        type: Object,
+        required: true
+    },
+    disableDefaultUi: {
+        type: Boolean,
+        default: false
+    },
+    gestureHandling: {
+        type: String,
+        default: "auto"
+    },
+    centerLat: {
+        type: Number,
+        default: null
+    },
+    centerLng: {
+        type: Number,
+        default: null
+    }
 })
 
 const marker = props.marker
-
-console.log(props.marker)
 
 // const marker = props.marker
 
@@ -39,11 +56,11 @@ controlSize="0"
         <GoogleMap
             :api-key="apiKey"
             class="map"
-            :center="{ lat: marker.lat, lng: marker.lng }"
+            :center="{ lat: centerLat ?? marker.lat, lng: centerLng ?? marker.lng }"
             :zoom="10"
             mapId="7d2f8294b343021c"
-            :disableDefaultUi="true"
-            gestureHandling="none"
+            :disableDefaultUi="props.disableDefaultUi"
+            :gestureHandling="props.gestureHandling"
         >
             <AdvancedMarker
                 :options="{ position: { lat: marker.lat, lng: marker.lng } }"

@@ -48,7 +48,13 @@ const submit = () => {
         </form>
 
 
-        <GoogleMapComponent :marker="{ lat: props.lat, lng: props.lng }"></GoogleMapComponent>
+        <GoogleMapComponent
+            :disableDefaultUi="true"
+            gestureHandling="none"
+            :marker="{ lat: props.lat, lng: props.lng }"
+        >
+
+        </GoogleMapComponent>
     </div>
 </template>
 
