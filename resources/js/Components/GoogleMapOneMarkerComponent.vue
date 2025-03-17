@@ -26,7 +26,6 @@ const props = defineProps({
     }
 })
 
-const marker = props.marker
 
 // const marker = props.marker
 
@@ -59,8 +58,8 @@ controlSize="0"
             :center="{ lat: centerLat ?? marker.lat, lng: centerLng ?? marker.lng }"
             :zoom="10"
             mapId="7d2f8294b343021c"
-            :disableDefaultUi="props.disableDefaultUi"
-            :gestureHandling="props.gestureHandling"
+            :disableDefaultUi="disableDefaultUi"
+            :gestureHandling="gestureHandling"
         >
             <AdvancedMarker
                 :options="{ position: { lat: marker.lat, lng: marker.lng } }"

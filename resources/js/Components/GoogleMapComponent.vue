@@ -1,55 +1,82 @@
 <script setup>
 // https://www.npmjs.com/package/vue3-google-map#installation google maps vue 3
-import { ref, onMounted, watch, defineProps } from 'vue'
+import { ref, onMounted, watch, defineProps, defineEmits } from 'vue'
 import { GoogleMap, AdvancedMarker, InfoWindow } from 'vue3-google-map'
 import { usePage, Link } from '@inertiajs/vue3'
 
 const props = defineProps({
     markers: Array,
-    handleAnyMapClick: Function,
-    handleMapDBClick: Function,
-    style: String,
+    center: {
+        type: Object,
+        required: true
+    },
+    zoom: {
+        type: Number,
+        default: 10
+    },
+    mapId: {
+        type: String,
+        default: "7d2f8294b343021c"
+    },
+    disableDoubleClickZoom: {
+        type: Boolean,
+        default: false
+    },
+    disableDefaultUi: {
+        type: Boolean,
+        default: false
+    },
+    gestureHandling: {
+        type: String,
+        default: "auto"
+    }
 })
 
-const markers = props.markers
+const emit = defineEmits(['ready', 'mapDBClick']);
 
-const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY
+const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
+const mapRef = ref(null);
+const googleApi = ref(null);
+
+watch(() => mapRef.value?.ready, (ready) => {
+    if (ready) {
+        googleApi.value = mapRef.value.api;
+        emit('ready', googleApi.value);
+    }
+});
+
+const truncateContent = (content, length=100) => {
+    return content.length > length ? content.substring(0, length) + '...' : content;
+}
 </script>
 
 <template>
-    <!-- mapTypeId="satellite" -->
-    <div @click="handleAnyMapClick">
-        <GoogleMap
-            ref="mapRef"
-            :api-key="apiKey"
-            :style="style"
-            :center="{ lat: 56.9496, lng: 24.1052 }"
-            :zoom="10"
-            mapId="7d2f8294b343021c"
-            :disableDoubleClickZoom="true"
-            @dblclick="handleMapDBClick"
+    <GoogleMap
+        ref="mapRef"
+        :api-key="apiKey"
+        :center="props.center"
+        :zoom="props.zoom"
+        :mapId="props.mapId"
+        :disableDoubleClickZoom="props.disableDoubleClickZoom"
+        :disableDefaultUi="props.disableDefaultUi"
+        :gestureHandling="props.gestureHandling"
+
+        @dblclick="$emit('mapDBClick', $event)"
+    >
+        <AdvancedMarker
+            v-for="(marker, index) in props.markers"
+            :key="index"
+            :options="{ position: { lat: marker.lat, lng: marker.lng } }"
         >
-            <AdvancedMarker
-                v-for="(marker, index) in markers"
-                :key="index"
-                :options="{ position: { lat: marker.lat, lng: marker.lng } }"
-            >
-                <InfoWindow>
-                    <div>
-                        {{ marker.LocationName }}}
-                    </div>
+            <InfoWindow>
+                <div>Location name: {{ marker.location }}</div>
+                <div>Post title: {{ marker.title }}</div>
+                <div>{{ truncateContent(marker.content) }}</div>
+            </InfoWindow>
+        </AdvancedMarker>
 
-                    <div>{{ marker.title }}</div>
-                </InfoWindow>
-            </AdvancedMarker>
-
-            <slot>
-
-            </slot>
-        </GoogleMap>
-    </div>
-
-
+        <slot></slot>
+    </GoogleMap>
 </template>
 
 <style scoped>

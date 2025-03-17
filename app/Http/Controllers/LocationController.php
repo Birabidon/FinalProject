@@ -7,6 +7,8 @@ use App\Models\Location;
 
 class LocationController extends Controller
 {
+    // For now Location is not needed, but maybe I will use it in the future
+
     public function getAllMarkers()
     {
         $markers = Location::all();

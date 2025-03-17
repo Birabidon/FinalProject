@@ -1,14 +1,21 @@
 <script setup>
 // https://www.npmjs.com/package/vue3-google-map#installation google maps vue 3
+
+
+// ---------------- Important INFO ----------------
+// THis homeTest will stay unused, just in case I will come back to displaying LOCATIONS insted of POSTS
+// ------------------------------------------------
+
 import { ref, onMounted, watch, defineProps } from 'vue'
 import { GoogleMap, AdvancedMarker, InfoWindow } from 'vue3-google-map'
-import { usePage, Link } from '@inertiajs/vue3'
+import { Link } from '@inertiajs/vue3'
 
 const props = defineProps({
-    markers: Array
+    markers: {
+        type: Array,
+        required: true
+    }
 })
-
-const markers = props.markers
 
 const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY
 
@@ -37,7 +44,7 @@ watch(() => mapRef.value?.ready, (ready) => {
         })
     }
 
-    markers.forEach(marker => {
+    props.markers.forEach(marker => {
         getPlaceName({ lat: marker.lat, lng: marker.lng }, marker)
     })
 })
