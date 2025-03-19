@@ -19,6 +19,7 @@ watch(search, debounce( // debounce - waits for 0.5 second after the last key st
 // (value) => router.get('/users', { search: value }, { preserveState: true })); // preserveState: true - to keep the search value in the input field)
 // // when search changes makes a get request to the same page with the search query (http://127.0.0.1:8000/users?search=aleks)
 
+// https://www.youtube.com/watch?v=tZKYvtFGPDM&list=PL38wFHH4qYZXCW2rlBLNdHi5cv-v_qlXO&index=15&ab_channel=LearnwithJon
 const getDate = (date) =>
     new Date(date).toLocaleDateString("en-us", {
         year: "numeric",
