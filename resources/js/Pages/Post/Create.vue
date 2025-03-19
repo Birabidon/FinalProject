@@ -52,9 +52,8 @@ const submit = () => {
             :disableDefaultUi="true"
             gestureHandling="none"
             :marker="{ lat: props.lat, lng: props.lng }"
-        >
-
-        </GoogleMapComponent>
+            :zoom="15"
+        />
     </div>
 </template>
 

@@ -8,6 +8,10 @@ const props = defineProps({
         type: Object,
         required: true
     },
+    zoom: {
+        type: Number,
+        default: 10
+    },
     disableDefaultUi: {
         type: Boolean,
         default: false
@@ -56,10 +60,11 @@ controlSize="0"
             :api-key="apiKey"
             class="map"
             :center="{ lat: centerLat ?? marker.lat, lng: centerLng ?? marker.lng }"
-            :zoom="10"
+            :zoom="zoom"
             mapId="7d2f8294b343021c"
             :disableDefaultUi="disableDefaultUi"
             :gestureHandling="gestureHandling"
+            :zoomControl="true"
         >
             <AdvancedMarker
                 :options="{ position: { lat: marker.lat, lng: marker.lng } }"
