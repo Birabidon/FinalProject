@@ -23,12 +23,13 @@ class UserController extends Controller
         $searchTerm = $request->search; // to put the search term in the search input on page
 
         $can = [
-            'delete_user' => Auth::user() ?
-                Auth::user()->can('delete', User::class) : // if user is logged in, check if user can delete user (if he is an admin), by delete function in UserPolicy.php
+            'delete_user' =>
+                Auth::user() ?
+                Auth::user()->can('deleteOthers', User::class) : // if user is logged in, check if user can delete user (if he is an admin), by delete function in UserPolicy.php
                 null
         ];
 
-        return inertia('UsersList', [
+        return inertia('User/Index', [
             'users' => $users,
             'searchTerm' =>$searchTerm,
             'can' => $can
@@ -40,7 +41,17 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
-        //
+        $can = [
+            'delete_user' =>
+                Auth::user() ?
+                    $user->can('deleteSelf', User::class) || Auth::user()->can('deleteOthers', User::class) : // if user is logged in, check if user can delete user (if he is an admin), by delete function in UserPolicy.php
+                    null
+        ];
+
+        return inertia('User/Show', [
+            'user' => $user,
+            'can' => $can
+        ]);
     }
 
     /**
@@ -64,6 +75,8 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
-        //
+        $user->delete();
+
+        return redirect()->route('users.index')->with('success', 'User deleted successfully');
     }
 }
