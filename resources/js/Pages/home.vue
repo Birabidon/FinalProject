@@ -61,8 +61,6 @@ const handleMapDBClick = (e) => {
 <template>
     <Head title="Home"/>
 
-    <p class="p-4 bg-green-200" v-if="$page.props.flash.message">{{ $page.props.flash.message }}</p>
-
     <div id="map"></div>
 
     <!-- mapTypeId="satellite" -->

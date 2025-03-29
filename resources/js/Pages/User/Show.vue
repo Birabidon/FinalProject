@@ -1,6 +1,7 @@
 <script setup>
 import { defineProps } from 'vue';
 import Avatar from '@/Components/Avatar.vue';
+import {router} from "@inertiajs/vue3";
 // import { Inertia } from '@inertiajs/inertia';
 
 const props = defineProps(
@@ -17,8 +18,8 @@ const accountAge = (createdAt) => {
     return Math.floor(ageInMilliseconds / (1000 * 60 * 60 * 24)); // age in days
 }
 
-const handleDelete = () => {
-    console.log('Delete user');
+const handleDelete = (id) => {
+    router.delete(`/users/${id}`);
 }
 </script>
 
@@ -33,7 +34,7 @@ const handleDelete = () => {
             <p><strong>Account Created:</strong> {{ new Date(user.created_at).toLocaleDateString() }}</p>
             <p><strong>Account Age:</strong> {{ accountAge(user.created_at) }} days</p>
         </div>
-        <button v-if="can.delete_user" @click="handleDelete" class="delete-button">Delete User</button>
+        <button v-if="can.delete_user" @click="handleDelete(user.id)" class="delete-button">Delete User</button>
     </div>
 </template>
 

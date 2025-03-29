@@ -25,7 +25,6 @@ import {Link} from '@inertiajs/vue3'
 
 <template>
     <header>
-        <Link method="delete" href="users/3">Test</Link>
         <ul>
             <li><Link href="/" :class="{'active': $page.component === 'home'}">Home</Link></li>
             <li><Link href="about" :class="{'active': $page.component === 'about'}">About</Link></li>

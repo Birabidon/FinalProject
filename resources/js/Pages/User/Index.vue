@@ -26,7 +26,14 @@ const getDate = (date) =>
         year: "numeric",
         month: "long",
         day: "numeric",
-    })
+    }
+);
+
+const handleDelete = (id) => {
+    router.delete(`/users/${id}`, {
+        preserveState: true,
+    });
+}
 </script>
 
 <template>
@@ -65,7 +72,7 @@ const getDate = (date) =>
                 <td>{{ user.email }}</td>
                 <td>{{ getDate(user.created_at) }}</td>
                 <td v-if="can.delete_user">
-                    <button class="bg-red-500 w-6 h-6 rounded-full" @click.stop="() => console.log('Clicked')"></button>
+                    <button class="bg-red-500 w-6 h-6 rounded-full" @click.stop="handleDelete(user.id)"></button> <!-- @click.stop - to stop the event from bubbling up the dom tree. (without it Link would redirect to another page) -->
                 </td>
             </Link>
             </tbody>

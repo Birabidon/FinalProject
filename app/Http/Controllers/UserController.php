@@ -76,11 +76,11 @@ class UserController extends Controller
     public function destroy(User $user)
     {
         try {
-//            $user->delete();
+            $user->delete();
         } catch (\Exception $e) {
             return redirect()->back()->with(['error' => 'Failed to delete user: ' . $e->getMessage()]);
-            // return response()->json(['error' => 'Failed to delete user: ' . $e->getMessage()], 500);
+            // return response()->json(['error' => 'Failed to delete user: ' . $e->getMessage()], 500); // more for API
         }
-        return redirect()->route('home')->with(['success' => 'User deleted successfully' . random_int(1, 100)]);
+        return redirect()->route('home')->with(['success' => 'User deleted successfully']);
     }
 }

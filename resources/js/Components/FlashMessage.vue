@@ -11,8 +11,6 @@ const props = defineProps({
 const emit = defineEmits(['close']);
 
 const close = () => {
-    // visible.value = false;
-    console.log('Close');
     emit('close');
 };
 
