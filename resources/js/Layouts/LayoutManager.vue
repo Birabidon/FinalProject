@@ -1,21 +1,27 @@
-<template>
-    <component :is="$page.props.auth.user ? 'AppLayout' : 'GuestLayout'">
-        <slot />
-    </component>
-</template>
+<script setup>
+import AppLayout from '@/Layouts/App.vue';
+import GuestLayout from '@/Layouts/Guest.vue';
+import FlashMessage from '@/Components/FlashMessage.vue';
 
-<script>
-import AppLayout from '@/Layouts/App.vue'
-import GuestLayout from '@/Layouts/Guest.vue'
+import { ref, watch} from "vue";
+import {usePage} from "@inertiajs/vue3";
 
-export default {
-    components: {
-        AppLayout,
-        GuestLayout
-    },
+let showMessage = ref(false)
+
+watch(() => usePage().props.flash.message, (newFlash) => {
+    console.log('newFlash', newFlash);
+    showMessage.value = !showMessage.value;
+});
+
+const onClose = () => {
+    showMessage.value = !showMessage.value;
+    console.log('showMessage', showMessage.value);
 }
 </script>
 
-<style scoped>
-
-</style>
+<template>
+    <FlashMessage v-if="showMessage" :flash="$page.props.flash" @close="onClose"/>
+    <component :is="$page.props.auth.user ? AppLayout : GuestLayout">
+        <slot />
+    </component>
+</template>

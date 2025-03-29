@@ -1,6 +1,7 @@
 <script setup>
 import { defineProps } from 'vue';
 import Avatar from '@/Components/Avatar.vue';
+// import { Inertia } from '@inertiajs/inertia';
 
 const props = defineProps(
     {

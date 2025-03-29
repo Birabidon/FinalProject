@@ -1,4 +1,6 @@
 <script setup>
+import {Link} from '@inertiajs/vue3'
+
 // To run your project on another PC using Git, follow these steps:
 //     Clone the Repository: Clone the repository to your local machine.
 //     git clone git@github.com:Birabidon/FinalProject.git
@@ -23,6 +25,7 @@
 
 <template>
     <header>
+        <Link method="delete" href="users/3">Test</Link>
         <ul>
             <li><Link href="/" :class="{'active': $page.component === 'home'}">Home</Link></li>
             <li><Link href="about" :class="{'active': $page.component === 'about'}">About</Link></li>
@@ -83,14 +86,6 @@
     </footer>
 </template>
 
-<script>
-import { Link } from '@inertiajs/vue3'
-export default {
-    components: {
-        Link
-    }
-}
-</script>
 <style scoped>
 
 </style>
