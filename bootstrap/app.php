@@ -4,6 +4,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use App\Http\Middleware\HandleInertiaRequests;
+use App\Http\Middleware\CheckAdmin;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -12,9 +13,15 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
+//        $middleware->group('web', [
+//            HandleInertiaRequests::class,
+//            CheckAdmin::class,
+//        ]);
         $middleware->web(append: [
-            HandleInertiaRequests::class,
+            HandleInertiaRequests::class
         ]);
+
+        $middleware->append(CheckAdmin::class);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //
