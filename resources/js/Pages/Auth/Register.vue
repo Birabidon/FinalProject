@@ -1,7 +1,8 @@
 <script setup>
     // https://www.youtube.com/watch?v=_GygbuxiEnA&list=PL38wFHH4qYZXCW2rlBLNdHi5cv-v_qlXO&index=11&ab_channel=LearnwithJon
     import { useForm } from '@inertiajs/vue3'; // useForm is for handling form submission
-    import TextInput from '@/Components/TextInput.vue'; // import TextInput custom component
+    import TextInput from '@/Components/TextInput.vue';
+    import Avatar from "@/Components/Avatar.vue"; // import TextInput custom component
 
 
     // https://inertiajs.com/forms
@@ -41,7 +42,8 @@
                     </label>
                     <input type="file" id="avatar" @input="change" hidden>
 
-                    <img :src="form.preview ?? 'storage/avatars/default.jpg'" alt="preview">
+                    <Avatar :avatar="form.preview" alt="Avatar preview" :url="true"/>
+<!--                    <img :src="form.preview ?? 'storage/avatars/default.jpg'" alt="preview">-->
                 </div>
 
                 <p class="error mt-2">{{ form.errors.avatar}}</p>

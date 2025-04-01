@@ -26,7 +26,7 @@ const handleDelete = (id) => {
 <template>
     <div class="user-profile">
         <div class="avatar-container">
-            <Avatar :user="user"></Avatar>
+            <Avatar :avatar="user.avatar" :alt="user.name"></Avatar>
         </div>
         <h1>{{ user.name }}'s Profile</h1>
         <div class="user-details">

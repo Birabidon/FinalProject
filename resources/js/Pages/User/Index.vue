@@ -3,6 +3,7 @@ import { Link, router } from '@inertiajs/vue3'
 import { throttle, debounce } from 'lodash'; // throttle - invokes this function only once in 1 second, so it doesn't make a request on every key stroke
 import { ref, watch } from 'vue'
 import PaginationLink from "@/Components/PaginationLink.vue";
+import Avatar from "@/Components/Avatar.vue";
 
 const props = defineProps({
     users: Object,
@@ -66,7 +67,7 @@ const handleDelete = (id) => {
                 :key="user.id"
                 :href="`/users/${user.id}`">
                 <td>
-                    <img :src="user.avatar ? ('storage/' + user.avatar) : 'storage/avatars/default.jpg'" class="avatar">
+                     <Avatar :avatar="user.avatar" :alt="user.name"/>
                 </td>
                 <td>{{ user.name }}</td>
                 <td>{{ user.email }}</td>

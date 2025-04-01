@@ -1,5 +1,6 @@
 <script setup>
 import {Link} from '@inertiajs/vue3'
+import Avatar from '@/Components/Avatar.vue'
 
 // To run your project on another PC using Git, follow these steps:
 //     Clone the Repository: Clone the repository to your local machine.
@@ -19,7 +20,7 @@ import {Link} from '@inertiajs/vue3'
 // Serve the Application: Start the Laravel development server.
 //     php artisan serve
 // By following these steps, you should be able to run the project on another PC. Make sure to configure your .env file with the correct database and other environment settings.
-// php artisan storage:link
+// php artisan storage:link  <!--  point to the public folder, so avatar folder must have symbolic link to public folder: php artisan storage:link-->
 //
 </script>
 
@@ -35,10 +36,11 @@ import {Link} from '@inertiajs/vue3'
             <p>Hello, {{ $page.props.auth.user?.name }}</p>
         </div>
         <div class="account space-x-6 flex">
-            <img
-                :src="$page.props.auth.user?.avatar ? ('storage/' + $page.props.auth.user?.avatar) : ('/storage/avatars/default.jpg')"
-                alt="avatar"
-               class="avatar"> <!--  point to the public folder, so avatar folder must have symbolic link to public folder: php artisan storage:link-->
+            <Avatar :avatar="$page.props.auth.user.avatar" :alt="$page.props.user?.name"/>
+<!--            <img-->
+<!--                :src="$page.props.auth.user?.avatar ? ('storage/' + $page.props.auth.user?.avatar) : ('/storage/avatars/default.jpg')"-->
+<!--                alt="avatar"-->
+<!--               class="avatar">-->
             <Link
                 href="/logout"
                 method="POST"

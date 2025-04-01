@@ -3,17 +3,16 @@ import { defineProps } from 'vue';
 
 const props = defineProps(
     {
-        user: Object,
+        avatar: String,
+        alt: String,
+        url: Boolean
     }
 );
 </script>
+
 <template>
     <img
-        :src="user?.avatar ? ('/storage/' + user.avatar) : ('/storage/avatars/default.jpg')"
-        :alt="user?.name || 'avatar'"
+        :src="avatar ? (url ? avatar : ('/storage/' + avatar)) : ('/storage/avatars/default.jpg')"
+        :alt="alt || 'avatar'"
         class="avatar">
 </template>
-
-<style scoped>
-
-</style>
