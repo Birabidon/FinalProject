@@ -8,9 +8,11 @@ import {usePage} from "@inertiajs/vue3";
 
 let showMessage = ref(false)
 
-watch(() => usePage().props.flash.message, (newFlash) => {
-    console.log('newFlash', newFlash);
-    showMessage.value = !showMessage.value;
+watch(() => usePage().props.flash, (newFlash) => {
+    if (newFlash.message) {
+        console.log('newFlash', newFlash);
+        showMessage.value = !showMessage.value;
+    }
 });
 
 const onClose = () => {

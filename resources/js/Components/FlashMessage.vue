@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted } from 'vue';
+import {onMounted, onUnmounted} from 'vue';
 
 const props = defineProps({
     flash: {
@@ -16,6 +16,10 @@ const close = () => {
 
 onMounted(() => {
     setTimeout(close, 5000); // Auto close after 5 seconds
+});
+
+onUnmounted(() => {
+    console.log('Component is unmounted');
 });
 </script>
 

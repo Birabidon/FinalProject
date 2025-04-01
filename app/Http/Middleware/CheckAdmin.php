@@ -17,7 +17,7 @@ class CheckAdmin
     public function handle(Request $request, Closure $next): Response
     {
         if (Auth::user() && Auth::user()->email !== "nikita.oispovs@gmail.com"){
-            return redirect()->back()->with('error', 'You are not allowed to delete users');
+            return redirect()->back()->with('error', 'You are not admin');
         }
 
         return $next($request);
