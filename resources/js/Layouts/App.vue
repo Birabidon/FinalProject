@@ -36,7 +36,9 @@ import Avatar from '@/Components/Avatar.vue'
             <p>Hello, {{ $page.props.auth.user?.name }}</p>
         </div>
         <div class="account space-x-6 flex">
-            <Avatar :avatar="$page.props.auth.user.avatar" :alt="$page.props.user?.name"/>
+            <Link :href="`/users/${$page.props.auth.user?.id}`">
+                <Avatar :avatar="$page.props.auth.user.avatar" :alt="$page.props.user?.name"/>
+            </Link>
 <!--            <img-->
 <!--                :src="$page.props.auth.user?.avatar ? ('storage/' + $page.props.auth.user?.avatar) : ('/storage/avatars/default.jpg')"-->
 <!--                alt="avatar"-->

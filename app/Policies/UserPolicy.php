@@ -19,4 +19,15 @@ class UserPolicy
     {
         return $user->email === Auth::user()->email;
     }
+
+    public function isSelf(User $user)
+    {
+        return $user->email === Auth::user()->email;
+    }
+
+    public function isAdmin(User $user)
+    {
+        return $user->email === 'nikiton.osipoff@gmail.com';
+    }
+
 }

@@ -42,10 +42,10 @@ class UserController extends Controller
     public function show(User $user)
     {
         $can = [
-            'delete_user' =>
+            'edit' =>
                 Auth::user() ?
-                    $user->can('deleteSelf', User::class) || Auth::user()->can('deleteOthers', User::class) : // if user is logged in, check if user can delete user (if he is an admin), by delete function in UserPolicy.php
-                    null
+                    $user->can('isSelf', User::class) || Auth::user()->can('isAdmin', User::class) : // if user is logged in, check if user can edit user (if he is an admin), by update function in UserPolicy.php
+                    null,
         ];
 
         return inertia('User/Show', [
