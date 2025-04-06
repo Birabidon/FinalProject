@@ -30,10 +30,12 @@ const getDate = (date) =>
     }
 );
 
-const handleDelete = (id) => {
-    router.delete(`/users/${id}`, {
-        preserveState: true,
-    });
+const handleDelete = (id) => { // MAKE THAT USERCONTROLLER DELTE ROUTE WOULD REDIRECT BACK CUZ ITS NOT CONVINIENT FOR THIS PAGE
+    if (confirm('Are you sure you want to delete your account?')) {
+        router.delete(`/users/${id}`, {
+            preserveState: true, // to keep the state of the page
+        });
+    }
 }
 </script>
 

@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
@@ -59,7 +60,9 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
-        //
+        return inertia('User/Edit', [
+            'user' => $user
+        ]);
     }
 
     /**
@@ -67,7 +70,32 @@ class UserController extends Controller
      */
     public function update(Request $request, User $user)
     {
-        //
+        // Validate
+        $fields = $request->validate([
+            'avatar' => ['nullable', 'file', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
+            'name' => ['nullable', 'string', 'max:255'],
+            'email' => ['nullable', 'string', 'email', 'max:255', 'unique:users'],
+            'password' => ['nullable', 'string', 'min:3', 'confirmed'],
+        ]);
+
+        if ($request->hasFile('avatar')) {
+            $fields['avatar'] = Storage::disk('public')->put('avatars', $request->avatar);
+        }
+
+        foreach ($fields as $key => $value) {
+            if ($value === null) {
+                unset($fields[$key]);
+            }
+        }
+
+        $isUpdated = $user->update($fields);
+
+        if($isUpdated) {
+            return redirect()->route('users.show', $user)->with(['success' => 'Changes saved successfully']);
+        } else {
+            return redirect()->back()->with(['error' => 'Failed to save changes']);
+        }
+
     }
 
     /**

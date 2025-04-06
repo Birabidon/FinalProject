@@ -36,8 +36,8 @@ const handleDelete = (id) => {
                 <h1>{{ user.name }}</h1>
             </div>
             <div class="buttons-container">
-                <Link class="create-post">Create Post</Link>
-                <Link class="edit-profile" v-if="can.edit">Edit Profile</Link>
+                <Link class="create-post" href="/">Create Post</Link>
+                <Link class="edit-profile" v-if="can.edit" :href="`/users/${user.id}/edit`">Edit Profile</Link>
             </div>
         </div>
 
