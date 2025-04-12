@@ -13,10 +13,6 @@ return new class extends Migration
     {
         Schema::create('posts', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('created_by')->constrained('users')->onDelete('cascade');
-            $table->foreignId('updated_by')->constrained('users');
-            $table->foreignId('deleted_by')->nullable()->constrained('users');
-//            $table->foreignId('located_at')->constrained('locations')->onDelete('cascade');  // later
             $table->string('title');
             $table->longtext('content');
             $table->float('lat');
@@ -24,6 +20,10 @@ return new class extends Migration
             $table->string('location');
             $table->timestamp('deleted_at')->nullable();
             $table->timestamps();
+            $table->foreignId('created_by')->constrained('users')->onDelete('cascade');
+            $table->foreignId('updated_by')->constrained('users');
+            $table->foreignId('deleted_by')->nullable()->constrained('users');
+//            $table->foreignId('located_at')->constrained('locations')->onDelete('cascade');  // later
         });
     }
 

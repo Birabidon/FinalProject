@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Post extends Model
@@ -15,9 +16,16 @@ class Post extends Model
         'lat',
         'lng',
         'location',
-        'created_by',
-        'updated_by',
-        'deleted_by',
-        'located_at',
+        'created_by'
     ];
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
+
+    public function attachments()
+    {
+        return $this->hasMany(PostAttachment::class);
+    }
 }

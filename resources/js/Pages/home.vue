@@ -4,6 +4,10 @@ import { ref, onMounted, watch, defineProps } from 'vue'
 import { GoogleMap, AdvancedMarker, InfoWindow } from 'vue3-google-map'
 import { Link } from '@inertiajs/vue3'
 import GoogleMapComponent from "@/Components/GoogleMapComponent.vue"
+import MarkerDetailsModal from "@/Components/MarkerDetailsModal.vue"
+
+// Dropdown menu:  https://www.youtube.com/watch?v=mQJTGDI6noE&list=PLLQuc_7jk__Wa8IoZ2s0J-ql_MIisndtZ&index=10&ab_channel=TheCodeholic (0:00 - 10:00)
+
 
 const props = defineProps({
     postsMarkers: {
@@ -56,23 +60,36 @@ const handleMapDBClick = (e) => {
     console.log('Temp mark create' + temporaryMarker.value)
 }
 
+// -- MODAL ---
+const selectedMarker = ref(null);
+const isModalOpen = ref(false);
+
+const handleMarkerClick = (marker) => {
+    selectedMarker.value = marker;
+    isModalOpen.value = true;
+};
+
+const closeModal = () => {
+    isModalOpen.value = false;
+};
 </script>
 
 <template>
     <Head title="Home"/>
-
     <div id="map"></div>
 
     <!-- mapTypeId="satellite" -->
-    <div @click="handleMapClick">
+    <div @click="handleMapClick" class="map-container">
         <GoogleMapComponent
             ref="mapRef"
             :markers="props.postsMarkers"
             :center="{ lat: 56.9496, lng: 24.1052 }"
             :zoom="10"
             :disableDoubleClickZoom="true"
+            :disableInfoWindow="true"
             @mapDBClick="handleMapDBClick"
             @ready="initGeocoder"
+            @markerClick="handleMarkerClick"
             style="height: 90vh; width: 100%;"
         >
             <AdvancedMarker
@@ -97,13 +114,20 @@ const handleMapDBClick = (e) => {
                 </InfoWindow>
             </AdvancedMarker>
         </GoogleMapComponent>
+
+        <MarkerDetailsModal
+            :is-open="isModalOpen"
+            :marker="selectedMarker"
+            @close="closeModal"
+        />
     </div>
-
-
 </template>
 
 <style scoped>
-
+.map-container {
+    position: relative;
+    overflow: hidden;
+}
 </style>
 
 
