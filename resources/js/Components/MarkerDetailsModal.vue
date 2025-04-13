@@ -12,11 +12,15 @@ const props = defineProps({
     }
 });
 
-const emit = defineEmits(['close']);
+const emit = defineEmits(['close', 'showMore']);
 
 const closeModal = () => {
     emit('close');
 };
+
+const showMore = () => {
+    emit('showMore');
+}
 </script>
 
 <template>
@@ -33,6 +37,7 @@ const closeModal = () => {
 
                 <div v-if="marker.content" class="marker-content">
                     {{ marker.content }}
+                    <button @click="showMore" class="show-more-btn">Show more</button>
                 </div>
             </div>
             <div v-else class="modal-content">
@@ -43,6 +48,36 @@ const closeModal = () => {
 </template>
 
 <style scoped>
+.show-more-btn {
+    display: block;
+    width: 100%;
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    color: #0d6efd;
+    padding: 8px 15px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin: 0 0 15px 0;
+    text-align: center;
+}
+
+.show-more-btn:hover {
+    background-color: #e9ecef;
+    border-color: #ced4da;
+}
+
+.show-more-btn:active {
+    background-color: #dde2e6;
+    transform: translateY(1px);
+}
+
+.show-more-btn:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(13, 110, 253, 0.25);
+}
+
 .modal-container {
     position: absolute;
     top: 0;

@@ -55,29 +55,28 @@ controlSize="0"
 
 <template>
     <!-- mapTypeId="satellite" -->
-    <div>
-        <GoogleMap
-            :api-key="apiKey"
-            class="map"
-            :center="{ lat: centerLat ?? marker.lat, lng: centerLng ?? marker.lng }"
-            :zoom="zoom"
-            mapId="7d2f8294b343021c"
-            :disableDefaultUi="disableDefaultUi"
-            :gestureHandling="gestureHandling"
-            :zoomControl="true"
-        >
-            <AdvancedMarker
-                :options="{ position: { lat: marker.lat, lng: marker.lng } }"
-            />
-        </GoogleMap>
-    </div>
+    <GoogleMap
+        :api-key="apiKey"
+        class="map"
+        :center="{ lat: centerLat ?? marker.lat, lng: centerLng ?? marker.lng }"
+        :zoom="zoom"
+        mapId="7d2f8294b343021c"
+        :disableDefaultUi="disableDefaultUi"
+        :gestureHandling="gestureHandling"
+        :zoomControl="true"
+        mapTypeId="satellite"
+    >
+        <AdvancedMarker
+            :options="{ position: { lat: marker.lat, lng: marker.lng } }"
+        />
+    </GoogleMap>
 
 
 </template>
 
 <style scoped>
 .map{
-    width: 60%;
+    width: 100%;
     height: 60vh
 }
 </style>
