@@ -10,7 +10,7 @@ class PostController extends Controller
 
     public function getAllPostsMarkers()
     {
-        $markers = Post::all('title', 'content', 'lat', 'lng', 'location', 'created_by', 'created_at');
+        $markers = Post::with('user')->get(['title', 'content', 'lat', 'lng', 'location', 'created_by', 'created_at']);
 
         return inertia('home', ['postsMarkers' => $markers]);
     }

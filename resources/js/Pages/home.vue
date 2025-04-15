@@ -1,13 +1,16 @@
 <script setup>
 // https://www.npmjs.com/package/vue3-google-map#installation google maps vue 3
-import { ref, onMounted, watch, defineProps } from 'vue'
-import { GoogleMap, AdvancedMarker, InfoWindow } from 'vue3-google-map'
-import { Link } from '@inertiajs/vue3'
-import GoogleMapComponent from "@/Components/GoogleMapComponent.vue"
-import MarkerDetailsModal from "@/Components/MarkerDetailsModal.vue"
+import { ref, onMounted, watch, defineProps } from 'vue';
+import { GoogleMap, AdvancedMarker, InfoWindow } from 'vue3-google-map';
+import { Link } from '@inertiajs/vue3';
+import GoogleMapComponent from "@/Components/GoogleMapComponent.vue";
+import MarkerDetailsModal from "@/Components/MarkerDetailsModal.vue";
+import ShowPost from "@/Pages/Post/Show.vue";
 
 // Dropdown menu:  https://www.youtube.com/watch?v=mQJTGDI6noE&list=PLLQuc_7jk__Wa8IoZ2s0J-ql_MIisndtZ&index=10&ab_channel=TheCodeholic (0:00 - 10:00)
 
+
+// TODO: Make that postMarkers would be only posts location and to get details must be done request to the server
 
 const props = defineProps({
     postsMarkers: {
@@ -17,8 +20,15 @@ const props = defineProps({
 })
 
 const googleApi = ref(null)
-
 let getPlaceName = null
+
+const temporaryMarker = ref(null)
+const alwaysOpen = ref(true)
+
+
+// -- MODAL ---
+const selectedPost = ref(null);
+const isModalOpen = ref(false);
 
 const initGeocoder = (Api) => {
     // getting googleApi from GoogleMapComponent, when map is ready, GoogleMapComponent emits 'ready' event
@@ -40,9 +50,6 @@ const initGeocoder = (Api) => {
     }
 }
 
-const temporaryMarker = ref(null)
-const alwaysOpen = ref(true)
-
 const handleMapClick = (e) => {
     temporaryMarker.value = null
 }
@@ -60,12 +67,8 @@ const handleMapDBClick = (e) => {
     console.log('Temp mark create' + temporaryMarker.value)
 }
 
-// -- MODAL ---
-const selectedMarker = ref(null);
-const isModalOpen = ref(false);
-
-const handleMarkerClick = (marker) => {
-    selectedMarker.value = marker;
+const handleMarkerClick = (post) => {
+    selectedPost.value = post;
     isModalOpen.value = true;
 };
 
@@ -117,8 +120,15 @@ const closeModal = () => {
 
         <MarkerDetailsModal
             :is-open="isModalOpen"
-            :marker="selectedMarker"
+            :marker="selectedPost"
             @close="closeModal"
+        />
+    </div>
+
+    <div class="post-preview">
+        <ShowPost
+            v-if="selectedPost"
+            :post="selectedPost"
         />
     </div>
 </template>
