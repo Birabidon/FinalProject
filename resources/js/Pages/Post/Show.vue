@@ -3,6 +3,7 @@ import { ref, onMounted } from 'vue'
 import { BIconGeoAlt, BIconCalendar, BIconPerson } from 'bootstrap-icons-vue'
 import Avatar from "@/Components/Avatar.vue";
 import GoogleMapComponent from "@/Components/GoogleMapOneMarkerComponent.vue";
+import PostCard from "@/Components/Posts/PostCard.vue";
 
 const props = defineProps({
     post: {
@@ -79,7 +80,10 @@ const toggleContent = () => {
 
 <style scoped>
 .post-container {
-    max-width: 800px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
     margin: 0 auto;
     padding: 20px;
     background: white;
@@ -169,7 +173,7 @@ const toggleContent = () => {
     border-radius: 12px;
     height: 50vh !important;
     min-height: 300px;
-    width: 100%;
+    min-width: 500px;
     transition: box-shadow 0.3s ease;
 }
 

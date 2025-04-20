@@ -36,7 +36,7 @@ const props = defineProps({
     }
 })
 
-const emit = defineEmits(['ready', 'mapDBClick', 'markerClick:marker']);
+const emit = defineEmits(['ready', 'mapDBClick', 'markerClick']);
 
 const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 const mapRef = ref(null);

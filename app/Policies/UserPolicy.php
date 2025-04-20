@@ -30,4 +30,8 @@ class UserPolicy
         return $user->email === 'nikiton.osipoff@gmail.com';
     }
 
+    public function update(User $authUser, User $targetUser)
+    {
+        return ($authUser->email === $targetUser->email || $this->isAdmin($authUser));
+    }
 }

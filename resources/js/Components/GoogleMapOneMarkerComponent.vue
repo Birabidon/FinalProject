@@ -20,6 +20,10 @@ const props = defineProps({
         type: String,
         default: "auto"
     },
+    zoomControl: {
+        type: Boolean,
+        default: true
+    },
     centerLat: {
         type: Number,
         default: null
@@ -63,7 +67,7 @@ controlSize="0"
         mapId="7d2f8294b343021c"
         :disableDefaultUi="disableDefaultUi"
         :gestureHandling="gestureHandling"
-        :zoomControl="true"
+        :zoomControl="zoomControl"
         mapTypeId="satellite"
     >
         <AdvancedMarker

@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Inertia\Inertia;
 
 class UserController extends Controller
 {
@@ -40,8 +41,11 @@ class UserController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(User $user)
+    public function show(User $user, Request $request)
     {
+        $tab = $request->query('tab', 'posts'); // get the tab from the request, if not set, default to posts
+        $search = $request->query('search');
+
         $can = [
             'edit' =>
                 Auth::user() ?
@@ -49,10 +53,37 @@ class UserController extends Controller
                     null,
         ];
 
-        return inertia('User/Show', [
+        $data = [
             'user' => $user,
-            'can' => $can
-        ]);
+            'can' => $can,
+            'currentTab' => $tab,
+            'searchTerm' => $search,
+        ];
+
+        switch($tab) {
+            case 'posts':
+                $query = $user->posts();
+                if ($search) {
+                    $query->where(function ($q) use ($search) {
+                        $q-> where('title', 'like', "%$search%")
+                            ->orWhere('content', 'like', "%$search%")
+                            ->orWhere('location', 'like', "%$search%");
+                    });
+                }
+                $data['posts'] = $query->get();
+                break;
+            case 'info':
+                $data['info'] = [
+                    'posts_count' => $user->posts()->count(),
+                    'account_created' => $user->created_at->format('Y-m-d H:i:s'),
+                    'account_age' => $user->created_at->diffForHumans(),
+                    'last_updated' => $user->updated_at->format('Y-m-d H:i:s'),
+                    'unique_locations' => $user->posts()->distinct('location')->count('location')
+                ];
+                break;
+        }
+
+        return inertia('User/Show', $data);
     }
 
     /**

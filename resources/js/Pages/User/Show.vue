@@ -1,14 +1,27 @@
 <script setup>
-import { defineProps } from 'vue';
+import {defineProps, watch, ref} from 'vue';
 import Avatar from '@/Components/Avatar.vue';
 import {router, Link} from "@inertiajs/vue3";
+import ShowUserPosts from "@/Pages/User/Profile/ShowUserPosts.vue";
+import PostCard from "@/Components/Posts/PostCard.vue";
+import SearchBar from "@/Components/SearchBar.vue";
 
+
+// Rewrite everything using this: https://inertiajs.com/partial-reloads
+// Implement what is written in copilot!!!!!!!!!!!!!!!!!!!!
 const props = defineProps(
     {
         user: Object,
-        can: Object
+        can: Object,
+        posts: Object,
+        info: Object,
+        currentTab: String,
+        searchTerm: String
     }
 );
+
+const search = ref(props.searchTerm || '');
+
 
 const accountAge = (createdAt) => {
     const createdDate = new Date(createdAt);
@@ -19,6 +32,29 @@ const accountAge = (createdAt) => {
 
 const handleDelete = (id) => {
     router.delete(`/users/${id}`);
+}
+
+const handleSearch = (term) => {
+    router.get(`/users/${props.user.id}`, {
+            tab: props.currentTab,
+            search: term,
+        },
+        {
+            preserveState: true,
+            only: [props.currentTab, 'searchTerm', 'currentTab'],
+            preserveScroll: true
+        });
+}
+
+const handleRedirect = (tab) => {
+    router.get(`/users/${props.user.id}`, {
+            tab: tab,
+        },
+        {
+            preserveState: true,
+            only: [tab, 'searchTerm', 'currentTab'],
+            preserveScroll: true
+        });
 }
 </script>
 
@@ -42,17 +78,83 @@ const handleDelete = (id) => {
         </div>
 
         <div class="nav-bar">
-            <Link href="/posts" class="nav-link">Posts</Link>
-            <Link href="/info" class="nav-link">Info</Link>
+            <button @click.prevent="handleRedirect('posts')" class="nav-link">Posts</button>
+            <button  @click.prevent="handleRedirect('info')" class="nav-link">Info</button>
             <Link href="/comments" class="nav-link">Comments</Link>
             <Link href="/likes" class="nav-link">Likes</Link>
             <Link href="/friends" class="nav-link">Friends</Link>
             <Link href="/photos" class="nav-link">Photos</Link>
         </div>
 
-        <div class="information">
+        <div class="tab-content">
+            <div
+                v-if="currentTab === 'posts'"
+                class="posts-container"
+            >
+
+                <div v-if="posts && posts.length === 0" class="empty-state">
+                    {{ search ? 'No posts matching your search.' : 'No posts yet.'}}
+                </div>
+                <div v-else>
+                    <div class="search-container">
+                        <SearchBar
+                            :searchTerm="searchTerm"
+                            @search="handleSearch"
+                        />
+                    </div>
+
+                    <PostCard
+                        v-if="posts"
+                        v-for="post in posts"
+                        :key="post.id"
+                        :post="post"
+                    />
+                </div>
+
+
+            </div>
+            <div
+                v-if="currentTab === 'info'"
+                class="info-container"
+            >
+                <div class="info-card">
+                    <h2 class="info-title">User Information</h2>
+
+                    <div class="info-item">
+                        <div class="info-label">Email</div>
+                        <div class="info-value">{{ user.email }}</div>
+                    </div>
+
+                    <div class="info-item">
+                        <div class="info-label">Posts</div>
+                        <div class="info-value">{{ info.posts_count }}</div>
+                    </div>
+
+                    <div class="info-item">
+                        <div class="info-label">Account Created</div>
+                        <div class="info-value">{{ info.account_created }}</div>
+                    </div>
+
+                    <div class="info-item">
+                        <div class="info-label">Account Age</div>
+                        <div class="info-value">{{ info.account_age }}</div>
+                    </div>
+
+                    <div class="info-item">
+                        <div class="info-label">Last Updated</div>
+                        <div class="info-value">{{ info.last_updated }}</div>
+                    </div>
+
+                    <div class="info-item">
+                        <div class="info-label">Unique Locations</div>
+                        <div class="info-value">{{ info.unique_locations }}</div>
+                    </div>
+                </div>
+            </div>
             <!-- Content that changes based on nav-bar selection -->
         </div>
+
+
     </div>
 </template>
 <!--            <button v-if="can.delete_user" @click="handleDelete(user.id)" class="delete-button">Delete User</button>-->
@@ -168,7 +270,7 @@ h1 {
     border-radius: 5px;
 }
 
-.information {
+.tab-content {
     background-color: #fff; /* Set background color to white */
     padding: 20px;
     margin-top: 10px; /* Reduce margin-top */
@@ -176,5 +278,49 @@ h1 {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     width: 100%; /* Take full width */
     flex-grow: 1; /* Take remaining space */
+}
+
+/* Info section */
+.info-container {
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+}
+
+.info-card {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 600px;
+    padding: 30px;
+}
+
+.info-title {
+    font-size: 24px;
+    color: #1877f2;
+    margin-bottom: 25px;
+    text-align: center;
+    border-bottom: 2px solid #f0f2f5;
+    padding-bottom: 15px;
+}
+
+.info-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+    padding: 10px 0;
+    border-bottom: 1px solid #f0f2f5;
+}
+
+.info-label {
+    font-weight: bold;
+    color: #555;
+    flex: 1;
+}
+
+.info-value {
+    color: #333;
+    flex: 2;
 }
 </style>

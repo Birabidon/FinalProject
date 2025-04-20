@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Post;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class PostController extends Controller
 {
@@ -22,7 +24,17 @@ class PostController extends Controller
     {
         $posts = Post::query()->paginate(10);
 
-        return inertia('Posts/Index', ['posts' => $posts]);
+        return inertia('Post/Index', ['posts' => $posts]);
+    }
+
+    public function getUserPosts(User $user)
+    {
+        $posts = $user->posts()->get();
+
+        return Inertia::render('User/Profile/ShowUserPosts', [
+            'posts' => $posts,
+            'user' => $user,
+        ]);
     }
 
     public function indexWithLocation()
