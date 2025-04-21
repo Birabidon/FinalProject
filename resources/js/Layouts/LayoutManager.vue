@@ -3,7 +3,7 @@ import AppLayout from '@/Layouts/App.vue';
 import GuestLayout from '@/Layouts/Guest.vue';
 import FlashMessage from '@/Components/FlashMessage.vue';
 
-import { ref, watch, onMounted} from "vue";
+import { ref, watch, onMounted } from "vue";
 import {usePage} from "@inertiajs/vue3";
 
 let showMessage = ref(false)

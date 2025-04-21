@@ -1,5 +1,5 @@
 <script setup>
-import { defineProps, defineEmits } from 'vue';
+import {defineProps, defineEmits, ref, onUnmounted} from 'vue';
 
 const props = defineProps({
     isOpen: {
@@ -36,8 +36,11 @@ const showMore = () => {
                 <p><strong>Coordinates:</strong> {{ marker.lat.toFixed(6) }}, {{ marker.lng.toFixed(6) }}</p>
 
                 <div v-if="marker.content" class="marker-content">
-                    {{ marker.content }}
+                    {{ marker.content.substring(0, 200) + '...' }}
                     <button @click="showMore" class="show-more-btn">Show more</button>
+                </div>
+                <div v-else class="marker-content">
+                    No content
                 </div>
             </div>
             <div v-else class="modal-content">

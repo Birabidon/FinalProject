@@ -29,6 +29,7 @@ const alwaysOpen = ref(true)
 // -- MODAL ---
 const selectedPost = ref(null);
 const isModalOpen = ref(false);
+const postPreviewRef = ref(null);
 
 const initGeocoder = (Api) => {
     // getting googleApi from GoogleMapComponent, when map is ready, GoogleMapComponent emits 'ready' event
@@ -70,6 +71,13 @@ const handleMapDBClick = (e) => {
 const handleMarkerClick = (post) => {
     selectedPost.value = post;
     isModalOpen.value = true;
+};
+
+const handleShowMore = () => {
+    postPreviewRef.value.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+    })
 };
 
 const closeModal = () => {
@@ -122,10 +130,11 @@ const closeModal = () => {
             :is-open="isModalOpen"
             :marker="selectedPost"
             @close="closeModal"
+            @showMore="handleShowMore"
         />
     </div>
 
-    <div class="post-preview">
+    <div class="post-preview" ref="postPreviewRef">
         <ShowPost
             v-if="selectedPost"
             :post="selectedPost"

@@ -20,9 +20,6 @@ const props = defineProps(
     }
 );
 
-const search = ref(props.searchTerm || '');
-
-
 const accountAge = (createdAt) => {
     const createdDate = new Date(createdAt);
     const currentDate = new Date();
@@ -78,8 +75,8 @@ const handleRedirect = (tab) => {
         </div>
 
         <div class="nav-bar">
-            <button @click.prevent="handleRedirect('posts')" class="nav-link">Posts</button>
-            <button  @click.prevent="handleRedirect('info')" class="nav-link">Info</button>
+            <button @click.prevent="handleRedirect('posts')" :class="['nav-link', currentTab === 'posts' ? 'active' : '']">Posts</button>
+            <button  @click.prevent="handleRedirect('info')" :class="['nav-link', currentTab === 'info' ? 'active' : '']">Info</button>
             <Link href="/comments" class="nav-link">Comments</Link>
             <Link href="/likes" class="nav-link">Likes</Link>
             <Link href="/friends" class="nav-link">Friends</Link>
@@ -92,15 +89,16 @@ const handleRedirect = (tab) => {
                 class="posts-container"
             >
 
-                <div v-if="posts && posts.length === 0" class="empty-state">
-                    {{ search ? 'No posts matching your search.' : 'No posts yet.'}}
-                </div>
-                <div v-else>
+                <div>
                     <div class="search-container">
                         <SearchBar
                             :searchTerm="searchTerm"
                             @search="handleSearch"
                         />
+                    </div>
+
+                    <div v-if="posts.length === 0" class="empty-state">
+                        {{ searchTerm ? 'No posts matching your search.' : 'No posts yet.' }}
                     </div>
 
                     <PostCard
@@ -257,12 +255,22 @@ h1 {
 }
 
 .nav-link {
+    font-weight: bold;
     margin: 0 10px;
     padding: 10px 20px;
     text-decoration: none;
     color: #333;
     font-size: 14px;
     transition: background-color 0.3s;
+}
+
+.nav-link.active {
+    color: #1877f2;
+    background-color: #e7f0ff;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    position: relative;
+    top: 1px; /* Subtle downward shift */
 }
 
 .nav-link:hover {
