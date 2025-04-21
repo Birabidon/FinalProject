@@ -41,7 +41,7 @@ header .account a {
 }
 main {
     background-color: #d5d2d2;
-    min-height: calc(100vh - 40px);
+    min-height: calc(100vh - 72px);
     padding: 0;
 }
  footer {

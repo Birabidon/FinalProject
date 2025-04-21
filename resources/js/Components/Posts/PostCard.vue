@@ -2,7 +2,9 @@
 import {Link} from "@inertiajs/vue3";
 import Avatar from "@/Components/Avatar.vue";
 import GoogleMapComponent from "@/Components/GoogleMapOneMarkerComponent.vue";
-import { BIconGeoAlt, BIconCalendar, BIconPerson } from 'bootstrap-icons-vue'
+import { BIconGeoAlt, BIconCalendar, BIconPerson } from 'bootstrap-icons-vue';
+import Menu from 'primevue/menu';
+import {ref} from "vue";
 
 
 const props = defineProps({
@@ -12,16 +14,22 @@ const props = defineProps({
     },
 });
 
+
+
 </script>
 
 <template>
     <div class="post-card">
-        <Link :href="`posts/${post.id}`" class="post-link">
+        <Link :href="`/posts/${post.id}`" class="post-link">
             <div class="card-left-side">
-                <div class="card-header" v-if="post.user">
-                    <Avatar />
-                    <h2 class="post-author">{{ post.user.name }}</h2>
+                <div class="card-header">
+                    <div class="card-header-left" v-if="post.user">
+                        <Avatar />
+                        <h2 class="post-author">{{ post.user.name }}</h2>
+                    </div>
+
                 </div>
+
                 <div class="card-info">
                     <div class="info-item">
                         <h3>{{ post.title }}</h3>
@@ -60,6 +68,17 @@ const props = defineProps({
 </template>
 
 <style scoped>
+/* THree dots */
+.card-header {
+    display: flex;
+    align-items: start;
+}
+
+.card-header-left {
+    margin-bottom: 1rem;
+}
+
+
 .post-card {
     background: white;
     border-radius: 12px;
@@ -87,6 +106,7 @@ const props = defineProps({
     padding: 1.25rem;
     display: flex;
     flex-direction: column;
+    position: relative;
 }
 
 .card-right-side {
@@ -94,12 +114,6 @@ const props = defineProps({
     width: 180px;
     min-width: 180px;
     overflow: hidden;
-}
-
-.card-header {
-    display: flex;
-    align-items: center;
-    margin-bottom: 1rem;
 }
 
 .card-header :deep(.avatar) {

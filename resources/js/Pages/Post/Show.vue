@@ -3,7 +3,7 @@ import { ref, onMounted } from 'vue'
 import { BIconGeoAlt, BIconCalendar, BIconPerson } from 'bootstrap-icons-vue'
 import Avatar from "@/Components/Avatar.vue";
 import GoogleMapComponent from "@/Components/GoogleMapOneMarkerComponent.vue";
-import PostCard from "@/Components/Posts/PostCard.vue";
+import Menu from "primevue/menu";
 
 const props = defineProps({
     post: {
@@ -12,66 +12,117 @@ const props = defineProps({
     }
 });
 
-const showFullContent = ref(false);
-const contentPreview = ref('');
+// const showFullContent = ref(false);
+// const contentPreview = ref('');
 
-onMounted(() => {
-    if (props.post.content && props.post.content.length > 200) {
-        contentPreview.value = props.post.content.substring(0, 200) + '...';
-    } else {
-        contentPreview.value = props.post.content;
-        showFullContent.value = true;
+// onMounted(() => {
+//     if (props.post.content && props.post.content.length > 200) {
+//         contentPreview.value = props.post.content.substring(0, 200) + '...';
+//     } else {
+//         contentPreview.value = props.post.content;
+//         showFullContent.value = true;
+//     }
+// });
+
+// const toggleContent = () => {
+//     showFullContent.value = !showFullContent.value;
+// };
+
+const menu = ref(null);
+const menuItems = ref([
+    {
+        label: 'Edit',
+        icon: 'pi pi-pencil',
+        command: () => editPost(props.post.id)
+    },
+    {
+        label: 'Delete',
+        icon: 'pi pi-trash',
+        command: () => deletePost(props.post.id)
+    },
+    {
+        separator: true
+    },
+    {
+        label: 'Share',
+        icon: 'pi pi-share-alt',
+        command: () => sharePost(props.post.id)
     }
-});
+]);
 
-const toggleContent = () => {
-    showFullContent.value = !showFullContent.value;
+const toggleMenu = (event) => {
+    menu.value.toggle(event);
+};
+
+const editPost = (id) => {
+    // Edit logic
+    console.log('Edit post', id);
+};
+
+const deletePost = (id) => {
+    // Delete logic
+    console.log('Delete post', id);
+};
+
+const sharePost = (id) => {
+    // Share logic
+    console.log('Share post', id);
 };
 
 </script>
 
 <template>
-    <div class="post-container">
-        <div class="post-header">
-            <div class="post-user">
-                <Avatar :avatar="post.user.avatar" :alt="post.user.name" />
-                <h2 class="post-author">{{ post.user.name }}</h2>
+    <div class="page-container">
+        <div class="post-container">
+            <div class="post-header">
+                <div class="post-user">
+                    <Avatar :avatar="post.user.avatar" :alt="post.user.name" />
+                    <h2 class="post-author">{{ post.user.name }}</h2>
+                </div>
+                <h1 class="post-title">{{ post.title }}</h1>
+
+                <div class="menu-container">
+                    <button class="menu-trigger" @click="toggleMenu">
+                        <i class="pi pi-ellipsis-v"></i>
+                    </button>
+                    <Menu ref="menu" :model="menuItems" :popup="true" />
+                </div>
             </div>
-            <h1 class="post-title">{{ post.title }}</h1>
-        </div>
 
-        <div class="post-info">
-            <div class="info-item">
-                <BIconGeoAlt class="info-icon" />
-                <span>{{ post.location }}</span>
+            <div class="post-info">
+                <div class="info-item">
+                    <BIconGeoAlt class="info-icon" />
+                    <span>{{ post.location }}</span>
+                </div>
+                <div class="info-item">
+                    <BIconCalendar class="info-icon" />
+                    <span>{{ post.created_at }}</span>
+                </div>
             </div>
-            <div class="info-item">
-                <BIconCalendar class="info-icon" />
-                <span>{{ post.created_at }}</span>
+
+            <div class="post-map">
+                <GoogleMapComponent
+                    :disableDefaultUi="true"
+                    gestureHandling="none"
+                    :marker="{ lat: post.lat, lng: post.lng }"
+                    :zoom="15"
+                    class="map"
+                />
             </div>
-        </div>
 
-        <div class="post-map">
-            <GoogleMapComponent
-                :disableDefaultUi="true"
-                gestureHandling="none"
-                :marker="{ lat: post.lat, lng: post.lng }"
-                :zoom="15"
-                class="map"
-            />
-        </div>
+            <div class="post-content">
+                <p>{{ post.content }}</p>
+                <!--            <p v-if="showFullContent">{{ post.content }}</p>-->
+                <!--            <p v-else>{{ contentPreview }}</p>-->
 
-        <div class="post-content">
-            <p v-if="showFullContent">{{ post.content }}</p>
-            <p v-else>{{ contentPreview }}</p>
-
-            <button
-                v-if="post.content && post.content.length > 200"
-                @click="toggleContent"
-                class="show-more-btn"
-            >
-                {{ showFullContent ? 'Show Less' : 'Show More' }}
-            </button>
+                <!--            <button-->
+                <!--                v-if="post.content && post.content.length > 200"-->
+                <!--                @click="toggleContent"-->
+                <!--                class="show-more-btn"-->
+                <!--            >-->
+                <!--                {{ showFullContent ? 'Show Less' : 'Show More' }}-->
+                <!--            </button>-->
+            </div>
         </div>
     </div>
 
@@ -79,25 +130,56 @@ const toggleContent = () => {
 </template>
 
 <style scoped>
-.post-container {
+
+/* Three dots styles */
+
+.menu-container {
+    position: absolute; /* Change to absolute */
+    right: 0; /* Position at the right edge */
+    top: 0; /* Align to the top */
+    margin: 5px;
+}
+
+.menu-trigger {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 50%;
+}
+
+.menu-trigger:hover {
+    background-color: #f0f2f5;
+}
+
+.page-container {
     display: flex;
     flex-direction: column;
     align-items: center;
     width: 100%;
-    margin: 0 auto;
+    min-height: calc(100vh - 72px);
     padding: 20px;
     background: white;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.post-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 70%;
+    padding: 20px;
+    background: white;
+    position: relative;
 }
 
 .post-header {
     display: grid;
-    grid-template-columns: auto 1fr auto;
+    grid-template-columns: auto 1fr;
     align-items: center;
     padding-bottom: 16px;
     margin-bottom: 20px;
     border-bottom: 1px solid #dee2e6;
+    width: 100%;
 }
 
 .post-user {
@@ -124,7 +206,6 @@ const toggleContent = () => {
 }
 
 .post-title {
-    grid-column: 2;
     font-size: 1.75rem;
     color: #333;
     margin: 0;

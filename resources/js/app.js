@@ -4,6 +4,7 @@ import { createApp, h } from 'vue'
 import { createInertiaApp } from '@inertiajs/vue3'
 import { Head } from '@inertiajs/vue3'
 import LayoutManager from './Layouts/LayoutManager.vue'
+import PrimeVue from 'primevue/config';
 import 'primeicons/primeicons.css'
 
 createInertiaApp({
@@ -17,6 +18,7 @@ createInertiaApp({
     setup({ el, App, props, plugin }) {
         createApp({ render: () => h(App, props) })
             .use(plugin)
+            .use(PrimeVue)
             .component('Head', Head)
             .mount(el)
     },
