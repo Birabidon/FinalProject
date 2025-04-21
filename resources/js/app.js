@@ -4,6 +4,7 @@ import { createApp, h } from 'vue'
 import { createInertiaApp } from '@inertiajs/vue3'
 import { Head } from '@inertiajs/vue3'
 import LayoutManager from './Layouts/LayoutManager.vue'
+import 'primeicons/primeicons.css'
 
 createInertiaApp({
     resolve: name => {
