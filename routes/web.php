@@ -15,10 +15,13 @@ Route::inertia('/about', 'about')->name('about');
 
 Route::middleware('auth')->group(function () {
     Route::post('/logout ', [AuthController::class, 'logout'])->name('logout');
-    Route::resource('locations', LocationController::class);
-    Route::resource('posts', PostController::class);
-    Route::resource('users', UserController::class)->except(['destroy', 'update', 'edit']);
 
+    Route::resource('locations', LocationController::class);
+
+    Route::resource('posts', PostController::class);
+
+    // Users
+    Route::resource('users', UserController::class)->except(['destroy', 'update', 'edit']);
     // redirect from just /users/{user} to /users/{user}?tab=posts
     Route::get('users/{user}', function (User $user) {
         if (!request()->has('tab')) { // if there is no tab in the request

@@ -1,8 +1,8 @@
 <script setup>
 // https://www.npmjs.com/package/vue3-google-map#installation google maps vue 3
-import { ref, onMounted, watch, defineProps } from 'vue';
-import { GoogleMap, AdvancedMarker, InfoWindow } from 'vue3-google-map';
-import { Link } from '@inertiajs/vue3';
+import {ref, onMounted, defineProps, onBeforeUnmount} from 'vue';
+import { AdvancedMarker, InfoWindow } from 'vue3-google-map';
+import {Link, router} from '@inertiajs/vue3';
 import GoogleMapComponent from "@/Components/GoogleMapComponent.vue";
 import MarkerDetailsModal from "@/Components/MarkerDetailsModal.vue";
 import ShowPost from "@/Pages/Post/Show.vue";
@@ -16,39 +16,97 @@ const props = defineProps({
     postsMarkers: {
         type: Array,
         required: true
+    },
+    can: {
+        type: Object
+    },
+    post: {
+        type: Object
     }
 })
 
 const googleApi = ref(null)
-let getPlaceName = null
+const geocoder = ref(null);
 
 const temporaryMarker = ref(null)
 const alwaysOpen = ref(true)
 
 
 // -- MODAL ---
-const selectedPost = ref(null);
 const isModalOpen = ref(false);
 const postPreviewRef = ref(null);
+
+
+// Add these refs to your existing refs
+const scrollTimeout = ref(null);
+const scrollObserver = ref(null);
+
+// Detects if user scrolls near the postPreview and aligns it to the top of the screen
+const setupScrollSnapping = () => {
+    if (!postPreviewRef.value) return;
+
+    // Track when user stops scrolling
+    let scrollTimer = null;
+
+    const handleScroll = () => {
+        clearTimeout(scrollTimer);
+        scrollTimer = setTimeout(() => {
+            // User has stopped scrolling
+            const rect = postPreviewRef.value.getBoundingClientRect();
+
+            // If post is partially visible (between -100px and 100px from top of viewport)
+            // but not perfectly aligned
+            if (rect.top > -100 && rect.top < 200 && rect.top !== 0) {
+                postPreviewRef.value.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        }, 300);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+
+    // Store for cleanup
+    scrollObserver.value = {
+        cleanup: () => window.removeEventListener('scroll', handleScroll)
+    };
+};
+
+// Add these lifecycle hooks
+onMounted(() => {
+    // Your existing onMounted code...
+    setupScrollSnapping();
+});
+
+onBeforeUnmount(() => {
+    if (scrollObserver.value && postPreviewRef.value) {
+        scrollObserver.value.unobserve(postPreviewRef.value);
+    }
+});
 
 const initGeocoder = (Api) => {
     // getting googleApi from GoogleMapComponent, when map is ready, GoogleMapComponent emits 'ready' event
     googleApi.value = Api
-    const geocoder = new googleApi.value.Geocoder()
+    geocoder.value = new Api.Geocoder()
+}
 
-    getPlaceName = (latlng, marker) => {
-        geocoder.geocode({ location: latlng }, (results, status) => {
-            if (status === 'OK') {
-                if (results[0]) {
-                    marker.LocationName = results[0].formatted_address
-                } else {
-                    console.log('No results found')
-                }
+const getPlaceName = (latlng, marker) => {
+    geocoder.value.geocode({
+            location: latlng,
+            language: 'en'  // Force English language results
+        },
+        (results, status) => {
+        if (status === 'OK') {
+            if (results[0]) {
+                marker.LocationName = results[0].formatted_address
             } else {
-                console.log('Geocoder failed due to:', status)
+                console.log('No results found')
             }
-        })
-    }
+        } else {
+            console.log('Geocoder failed due to:', status)
+        }
+    })
 }
 
 const handleMapClick = (e) => {
@@ -68,27 +126,36 @@ const handleMapDBClick = (e) => {
     console.log('Temp mark create' + temporaryMarker.value)
 }
 
-const handleMarkerClick = (post) => {
-    selectedPost.value = post;
-    isModalOpen.value = true;
+const handleMarkerClick = (post) => { // Write request for post and comments in future
+    router.get(`/`,
+        {
+            post: post.id
+        },
+        {
+            preserveState: true,
+            only: ['post', 'can'],
+            preserveScroll: true,
+            onSuccess: () => {
+                isModalOpen.value = true;
+            }
+        });
+    // selectedPost.value = post;
+};
+
+const closeModal = () => {
+    isModalOpen.value = false;
 };
 
 const handleShowMore = () => {
     postPreviewRef.value.scrollIntoView({
         behavior: 'smooth',
         block: 'start'
-    })
-};
-
-const closeModal = () => {
-    isModalOpen.value = false;
-};
+    });
+}
 </script>
 
 <template>
     <Head title="Home"/>
-    <div id="map"></div>
-
     <!-- mapTypeId="satellite" -->
     <div @click="handleMapClick" class="map-container">
         <GoogleMapComponent
@@ -101,7 +168,7 @@ const closeModal = () => {
             @mapDBClick="handleMapDBClick"
             @ready="initGeocoder"
             @markerClick="handleMarkerClick"
-            style="height: 90vh; width: 100%;"
+            style="height: calc(100vh - 64px); width: 100%;"
         >
             <AdvancedMarker
                 v-if="temporaryMarker"
@@ -127,8 +194,9 @@ const closeModal = () => {
         </GoogleMapComponent>
 
         <MarkerDetailsModal
+            v-if="post"
             :is-open="isModalOpen"
-            :marker="selectedPost"
+            :marker="post"
             @close="closeModal"
             @showMore="handleShowMore"
         />
@@ -136,8 +204,9 @@ const closeModal = () => {
 
     <div class="post-preview" ref="postPreviewRef">
         <ShowPost
-            v-if="selectedPost"
-            :post="selectedPost"
+            v-if="post"
+            :post="post"
+            :can="can"
         />
     </div>
 </template>

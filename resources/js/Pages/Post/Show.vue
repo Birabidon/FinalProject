@@ -1,15 +1,20 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import {ref, onMounted, computed} from 'vue'
 import { BIconGeoAlt, BIconCalendar, BIconPerson } from 'bootstrap-icons-vue'
 import Avatar from "@/Components/Avatar.vue";
 import GoogleMapComponent from "@/Components/GoogleMapOneMarkerComponent.vue";
 import Menu from "primevue/menu";
+import {Link, router} from "@inertiajs/vue3";
 
 const props = defineProps({
     post: {
         type: Object,
         required: true
-    }
+    },
+    can: {
+        type: Object,
+        required: true
+    },
 });
 
 // const showFullContent = ref(false);
@@ -29,44 +34,73 @@ const props = defineProps({
 // };
 
 const menu = ref(null);
-const menuItems = ref([
-    {
-        label: 'Edit',
-        icon: 'pi pi-pencil',
-        command: () => editPost(props.post.id)
-    },
-    {
-        label: 'Delete',
-        icon: 'pi pi-trash',
-        command: () => deletePost(props.post.id)
-    },
-    {
-        separator: true
-    },
-    {
+const menuItems = computed(() => {
+    const items = [];
+
+    // Only add Edit if user has permission
+    if (props.can.edit) {
+        items.push({
+            label: 'Edit',
+            icon: 'pi pi-pencil',
+            command: () => editPost(props.post.id)
+        });
+    }
+
+    // Only add Delete if user has permission
+    if (props.can.delete) {
+        items.push({
+            label: 'Delete',
+            icon: 'pi pi-trash',
+            command: () => deletePost(props.post.id)
+        });
+    }
+
+    // Always add separator if we have at least one item above
+    if (items.length > 0) {
+        items.push({
+            separator: true
+        });
+    }
+
+    // Always add Share option
+    items.push({
         label: 'Share',
         icon: 'pi pi-share-alt',
         command: () => sharePost(props.post.id)
-    }
-]);
+    });
+
+    return items;
+});
 
 const toggleMenu = (event) => {
     menu.value.toggle(event);
 };
 
 const editPost = (id) => {
-    // Edit logic
-    console.log('Edit post', id);
+    router.get(`/posts/${id}/edit`);
 };
 
-const deletePost = (id) => {
-    // Delete logic
-    console.log('Delete post', id);
+const deletePost = () => {
+    if (confirm('Are you sure you want to delete this post?')) {
+        router.delete(`/posts/${props.post.id}`);
+    }
 };
 
 const sharePost = (id) => {
     // Share logic
     console.log('Share post', id);
+};
+
+const userRating = ref(0);
+const hoverRating = ref(0);
+
+const ratePost = (rating) => {
+    userRating.value = rating;
+    console.log('Rating:', rating);
+    // Send rating to backend
+    // router.post(`/posts/${props.post.id}/rate`, {
+    //     rating: rating
+    // });
 };
 
 </script>
@@ -85,7 +119,21 @@ const sharePost = (id) => {
                     <button class="menu-trigger" @click="toggleMenu">
                         <i class="pi pi-ellipsis-v"></i>
                     </button>
-                    <Menu ref="menu" :model="menuItems" :popup="true" />
+                    <Menu ref="menu" :model="menuItems" :popup="true">
+                        <template #item="{ item, props }">
+                            <!-- Handle separator -->
+                            <div v-if="item.separator" class="custom-separator"></div>
+
+                            <!-- Handle regular menu items - icons only -->
+                            <a
+                                v-else
+                                v-bind="props.action"
+                                class="custom-menu-item"
+                            >
+                                <i :class="[item.icon, 'custom-icon']"></i>
+                            </a>
+                        </template>
+                    </Menu>
                 </div>
             </div>
 
@@ -97,6 +145,22 @@ const sharePost = (id) => {
                 <div class="info-item">
                     <BIconCalendar class="info-icon" />
                     <span>{{ post.created_at }}</span>
+                </div>
+                <div class="info-item rating">
+                    <div class="star-container">
+                        <i
+                           v-for="star in 5"
+                           :key="star"
+                           :class="[
+                               star <= (hoverRating || userRating || post.averageRating || 0)
+                                   ? 'pi pi-star-fill star-filled'
+                                   : 'pi pi-star'
+                               ]"
+                           @click="ratePost(star)"
+                           @mouseenter="hoverRating = star"
+                           @mouseleave="hoverRating = 0"></i>
+                    </div>
+                    <span v-if="post.averageRating" class="rating-text">({{ post.averageRating.toFixed(1) }})</span>
                 </div>
             </div>
 
@@ -132,25 +196,58 @@ const sharePost = (id) => {
 <style scoped>
 
 /* Three dots styles */
-
+/* Menu container positioning */
 .menu-container {
-    position: absolute; /* Change to absolute */
-    right: 0; /* Position at the right edge */
-    top: 0; /* Align to the top */
-    margin: 5px;
+    position: absolute;
+    right: 0;
+    top: 0;
+    margin: 2rem;
 }
 
+/* Trigger button styling */
 .menu-trigger {
     background: transparent;
     border: none;
     cursor: pointer;
     padding: 8px;
     border-radius: 50%;
+    transition: background-color 0.2s;
 }
 
 .menu-trigger:hover {
     background-color: #f0f2f5;
 }
+
+/* Menu items styling - icons only */
+.custom-menu-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.75rem;
+    color: #495057;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    width: 44px;
+}
+
+.custom-menu-item:hover {
+    background-color: #f5f7f9;
+}
+
+/* Icon styling */
+.custom-icon {
+    font-size: 1.2rem;
+    color: #6c757d;
+}
+
+/* Menu separator */
+.custom-separator {
+    height: 1px;
+    background-color: #dee2e6;
+    margin: 0.5rem 0;
+}
+
+/* Page styles */
 
 .page-container {
     display: flex;
@@ -159,14 +256,15 @@ const sharePost = (id) => {
     width: 100%;
     min-height: calc(100vh - 72px);
     padding: 20px;
-    background: white;
+    background: lightblue;
 }
 
 .post-container {
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 70%;
+    width: 60%;
+    min-width: 850px;
     padding: 20px;
     background: white;
     position: relative;
@@ -269,44 +367,30 @@ const sharePost = (id) => {
     line-height: 1.6;
 }
 
-.show-more-btn {
-    display: block;
-    width: 100%;
-    background-color: #f8f9fa;
-    border: 1px solid #dee2e6;
-    border-radius: 4px;
-    color: #0d6efd;
-    padding: 8px 15px;
-    font-size: 14px;
+/* RATING STYLES */
+
+.rating {
+    display: flex;
+    align-items: center;
+    margin-left: auto;
+}
+
+/* Update these styles */
+.star-container {
+    display: flex;
+}
+
+.pi-star,
+.pi-star-fill {
+    color: #ddd;
     cursor: pointer;
-    transition: all 0.2s ease;
-    margin: 15px 0;
-    text-align: center;
+    font-size: 1.2rem;
+    margin-right: 2px;
+    transition: color 0.2s;
 }
 
-.show-more-btn:hover {
-    background-color: #e9ecef;
-    border-color: #ced4da;
-}
-
-.show-more-btn:active {
-    background-color: #dde2e6;
-    transform: translateY(1px);
-}
-
-.show-more-btn:focus {
-    outline: none;
-    box-shadow: 0 0 0 2px rgba(13, 110, 253, 0.25);
-}
-
-.map-container {
-    height: 300px;
-    background-color: #f5f5f5;
-    border-radius: 8px;
-    margin-bottom: 10px;
-}
-
-.map-details {
-    padding: 10px;
+.pi-star.star-filled,
+.pi-star-fill.star-filled {
+    color: #ffc107;
 }
 </style>

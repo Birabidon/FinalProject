@@ -34,4 +34,6 @@ class UserPolicy
     {
         return ($authUser->email === $targetUser->email || $this->isAdmin($authUser));
     }
+
+
 }

@@ -10,11 +10,23 @@ use Inertia\Inertia;
 class PostController extends Controller
 {
 
-    public function getAllPostsMarkers()
+    public function getAllPostsMarkers(Request $request)
     {
-        $markers = Post::with('user')->get(['title', 'content', 'lat', 'lng', 'location', 'created_by', 'created_at']);
+        $postId = $request->query('post');
 
-        return inertia('home', ['postsMarkers' => $markers]);
+        $data = [
+            'postsMarkers' => Post::with('user')->get(['id', 'lat', 'lng']),
+            'can' => [],
+        ];
+
+        if ($postId) {
+            $post = Post::find($postId)->load('user');
+            $data['post'] = $post;
+            $data['can']['edit'] = auth()->user() ? auth()->user()->can('update', $post) : false;
+            $data['can']['delete'] = auth()->user() ? auth()->user()->can('delete', $post) : false;
+        }
+
+        return inertia('home', $data);
     }
 
     /**
@@ -88,8 +100,12 @@ class PostController extends Controller
     public function show(Post $post)
     {
         $post->load('user');
+        $can = [
+            'edit' => auth()->user() ? auth()->user()->can('update', $post) : false,
+            'delete' => auth()->user() ? auth()->user()->can('delete', $post) : false,
+        ];
 
-        return inertia('Post/Show', ['post' => $post]);
+        return inertia('Post/Show', ['post' => $post, 'can' => $can]);
     }
 
     /**
@@ -97,7 +113,7 @@ class PostController extends Controller
      */
     public function edit(Post $post)
     {
-        //
+        return inertia('Post/Edit', ['post' => $post]);
     }
 
     /**
@@ -105,7 +121,22 @@ class PostController extends Controller
      */
     public function update(Request $request, Post $post)
     {
-        //
+        // Validate
+        $fields = $request->validate([
+            'title' => ['required', 'string', 'max:255'],
+            'content' => ['required', 'string'],
+            'lat' => ['required', 'numeric'],
+            'lng' => ['required', 'numeric'],
+            'location' => ['required', 'string', 'max:255'],
+        ]);
+
+        $isUpdated = $post->update($fields);
+
+        if($isUpdated) {
+            return redirect()->route('posts.show', $post)->with(['success' => 'Changes saved successfully']);
+        } else {
+            return redirect()->back()->with(['error' => 'Failed to save changes']);
+        }
     }
 
     /**
@@ -113,6 +144,11 @@ class PostController extends Controller
      */
     public function destroy(Post $post)
     {
-        //
+        try {
+            $post->delete();
+        } catch (\Exception $e) {
+            return redirect()->back()->with(['error' => 'Failed to delete post: ' . $e->getMessage()]);
+        }
+        return redirect()->route('home')->with(['success' => 'Post deleted successfully']);
     }
 }
