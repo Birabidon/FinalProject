@@ -10,20 +10,6 @@ class UserPolicy
     /**
      * Create a new policy instance.
      */
-    public function deleteOthers(User $user)
-    {
-        return $user->email === 'nikiton.osipoff@gmail.com';
-    }
-
-    public function deleteSelf(User $user)
-    {
-        return $user->email === Auth::user()->email;
-    }
-
-    public function isSelf(User $user)
-    {
-        return $user->email === Auth::user()->email;
-    }
 
     public function isAdmin(User $user)
     {
@@ -33,6 +19,11 @@ class UserPolicy
     public function update(User $authUser, User $targetUser)
     {
         return ($authUser->email === $targetUser->email || $this->isAdmin($authUser));
+    }
+
+    public function delete(User $authUser, User $targetUser)
+    {
+        return ($authUser->email === $targetUser->email || $authUser->isAdmin());
     }
 
 

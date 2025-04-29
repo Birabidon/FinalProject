@@ -97,11 +97,34 @@ const hoverRating = ref(0);
 const ratePost = (rating) => {
     userRating.value = rating;
     console.log('Rating:', rating);
-    // Send rating to backend
-    // router.post(`/posts/${props.post.id}/rate`, {
-    //     rating: rating
-    // });
+    // Send rating to backend and update post average rating
+    router.post(`/posts/${props.post.id}/rate`, {
+        rating: rating
+    }, {
+        preserveState: true,
+        preserveScroll: true,
+    });
 };
+
+// const ratePost = (rating) => {
+//     userRating.value = rating;
+//     isSubmitting.value = true;
+//
+//     router.post(`/posts/${props.post.id}/rate`,
+//         { rating },
+//         {
+//             preserveState: true,
+//             onSuccess: (page) => {
+//                 if (page.props.flash?.success) {
+//                     props.post.average_rating = page.props.flash.average_rating;
+//                     ratingSuccess.value = true;
+//                     setTimeout(() => ratingSuccess.value = false, 2000);
+//                 }
+//             },
+//             onFinish: () => isSubmitting.value = false
+//         }
+//     );
+// };
 
 </script>
 
@@ -152,7 +175,7 @@ const ratePost = (rating) => {
                            v-for="star in 5"
                            :key="star"
                            :class="[
-                               star <= (hoverRating || userRating || post.averageRating || 0)
+                               star <= (hoverRating || post.average_rating || 0)
                                    ? 'pi pi-star-fill star-filled'
                                    : 'pi pi-star'
                                ]"
@@ -160,7 +183,7 @@ const ratePost = (rating) => {
                            @mouseenter="hoverRating = star"
                            @mouseleave="hoverRating = 0"></i>
                     </div>
-                    <span v-if="post.averageRating" class="rating-text">({{ post.averageRating.toFixed(1) }})</span>
+                    <span v-if="post.average_rating" class="rating-text">({{ post.average_rating }})</span>
                 </div>
             </div>
 

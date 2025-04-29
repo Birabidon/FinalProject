@@ -20,8 +20,8 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('posts', PostController::class);
 
-    // Users
-    Route::resource('users', UserController::class)->except(['destroy', 'update', 'edit']);
+    Route::post('/posts/{post}/rate', [PostController::class, 'rate'])->name('posts.react');
+
     // redirect from just /users/{user} to /users/{user}?tab=posts
     Route::get('users/{user}', function (User $user) {
         if (!request()->has('tab')) { // if there is no tab in the request
@@ -31,7 +31,9 @@ Route::middleware('auth')->group(function () {
         return app(UserController::class)->show($user, request());
     })->name('users.show');
 
-    Route::get('/users/{user}/posts', [PostController::class, 'getUserPosts'])->name('user.posts');
+//    Route::get('/users/{user}/posts', [PostController::class, 'getUserPosts'])->name('user.posts'); implement in future
+
+    Route::get('/users', [UserController::class, 'index'])->name('users.index');
     Route::middleware(CanChangeUser::class)->group(function () {
         Route::get('/users/{user}/edit', [UserController::class, 'edit'])->name('users.edit');
         Route::post('/users/{user}', [UserController::class, 'update'])->name('users.update');

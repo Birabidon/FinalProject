@@ -51,4 +51,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Post::class, 'created_by');
     }
+
+    public function isAdmin(): bool
+    {
+        return $this->email === 'nikiton.osipoff@gmail.com';
+    }
 }

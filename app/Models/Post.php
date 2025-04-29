@@ -28,4 +28,22 @@ class Post extends Model
     {
         return $this->hasMany(PostAttachment::class);
     }
+
+    public function reactions()
+    {
+        return $this->hasMany(PostReaction::class);
+    }
+
+    // accessor for automatic average rating calculation
+    public function getAverageRatingAttribute() {
+        return $this->reactions()->avg('rating');
+    }
+
+    public function getUserRatingAttribute($userId = null) {
+        $userId = $userId ?: auth()->id();
+        return $this->reactions()->where('user_id', $userId)->value('rating');
+    }
+
+    // $appends to include them in JSON/arrays
+    protected $appends = ['average_rating', 'user_rating'];
 }

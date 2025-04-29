@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Post;
+use App\Models\PostReaction;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -106,6 +107,28 @@ class PostController extends Controller
         ];
 
         return inertia('Post/Show', ['post' => $post, 'can' => $can]);
+    }
+
+    public function rate(Request $request, Post $post) {
+        $data = $request->validate([
+            'rating' => ['required', 'integer', 'min:1', 'max:5'],
+        ]);
+
+        // add if rating is the same it would be deleted
+        try {
+            PostReaction::updateOrCreate(
+                ['post_id' => $post->id, 'user_id' => auth()->id()],
+                ['rating' => $data['rating']]
+            );
+        } catch (\Exception $e) {
+            return back()->with([
+                'error' => 'Rate failed: ' . $e->getMessage()
+            ]);
+        }
+
+        return back()->with([
+            'success' => 'rating saved'
+        ]);
     }
 
     /**

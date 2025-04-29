@@ -27,7 +27,7 @@ class UserController extends Controller
         $can = [
             'delete_user' =>
                 Auth::user() ?
-                Auth::user()->can('deleteOthers', User::class) : // if user is logged in, check if user can delete user (if he is an admin), by delete function in UserPolicy.php
+                Auth::user()->isAdmin() : // if user is logged in, check if user can delete user (if he is an admin), by delete function in UserPolicy.php
                 null
         ];
 
@@ -49,7 +49,7 @@ class UserController extends Controller
         $can = [
             'edit' =>
                 Auth::user() ?
-                    $user->can('isSelf', User::class) || Auth::user()->can('isAdmin', User::class) : // if user is logged in, check if user can edit user (if he is an admin), by update function in UserPolicy.php
+                    $user->can('isSelf', User::class) || Auth::user()->isAdmin() : // if user is logged in, check if user can edit user (if he is an admin), by update function in UserPolicy.php
                     null,
         ];
 

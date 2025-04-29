@@ -81,7 +81,7 @@ onMounted(() => {
 
 onBeforeUnmount(() => {
     if (scrollObserver.value && postPreviewRef.value) {
-        scrollObserver.value.unobserve(postPreviewRef.value);
+        scrollObserver.value.cleanup();
     }
 });
 

@@ -16,7 +16,7 @@ class CheckAdmin
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (Auth::user() && Auth::user()->email !== "nikiton.osipoff@gmail.com"){
+        if (Auth::user() && !Auth::user()->isAdmin()){
             return redirect()->back()->with('error', 'You are not admin');
         }
 
