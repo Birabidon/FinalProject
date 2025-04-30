@@ -177,6 +177,7 @@ const ratePost = (rating) => {
                         :votesCount="post.votes_count"
                         :userRating="post.user_rating"
                         @updateRating="ratePost"
+                        :votable="$page.props.auth.user"
                     />
                 </div>
             </div>

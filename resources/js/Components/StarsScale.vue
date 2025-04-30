@@ -14,6 +14,10 @@ const props = defineProps({
         type: Number,
         default: 0
     },
+    votable: {
+        type: Boolean,
+        default: true
+    }
 })
 
 const hoverRating = ref(0);
@@ -27,15 +31,20 @@ const emit = defineEmits(['updateRating']);
         <div class="star-container-wrapper">
             <div class="star-container">
                 <!-- Star code remains the same -->
-                <i v-for="star in 5" :key="star" class="star-wrapper">
+                <i v-for="star in 5" :key="star" class="star-wrapper" :class="{'non-votable': !votable}">
                     <i class="pi pi-star-fill star-fill"
-                       :class="{'yellow': star <= (averageRating || 0)}"></i>
+                       :class="{'yellow': star <= (Math.round(averageRating) || 0)}"></i>
                     <i class="pi pi-star star-border"
-                       :class="{'grey': votesCount === 0 || (votesCount > 0 && star > (Math.max(averageRating, hoverRating) || 0)),
-                                                'black': star <= (hoverRating || Math.floor(userRating) || 0)}"
-                       @click="() => emit('updateRating', star)"
-                       @mouseenter="hoverRating = star"
-                       @mouseleave="hoverRating = 0"></i>
+                       :class="{
+                          'grey': votesCount === 0 || (votesCount > 0 && star > (Math.max(Math.round(averageRating), hoverRating) || 0)),
+                          'black': star <= (hoverRating || userRating || 0)
+                       }"
+                       v-on="votable ? {
+                          click: () => emit('updateRating', star),
+                          mouseenter: () => hoverRating = star,
+                          mouseleave: () => hoverRating = 0
+                       } : {}"
+                    ></i>
                 </i>
             </div>
             <span class="rating-text">({{ averageRating ? parseFloat(averageRating).toFixed(2) : '0.00' }})</span>
@@ -45,7 +54,7 @@ const emit = defineEmits(['updateRating']);
 </template>
 
 <style scoped>
-/* Update these styles */
+
 .star-container {
     display: flex;
 }
@@ -53,7 +62,6 @@ const emit = defineEmits(['updateRating']);
 .pi-star,
 .pi-star-fill {
     color: #ddd;
-    cursor: pointer;
     font-size: 1.2rem;
     margin-right: 2px;
     transition: color 0.2s;
@@ -64,6 +72,14 @@ const emit = defineEmits(['updateRating']);
     display: inline-block;
     margin-right: 2px;
     cursor: pointer;
+}
+
+.non-votable {
+    cursor: default;
+}
+
+.non-votable .star-border {
+    cursor: default;
 }
 
 .star-fill {
