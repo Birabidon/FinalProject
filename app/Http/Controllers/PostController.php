@@ -16,7 +16,13 @@ class PostController extends Controller
         $postId = $request->query('post');
 
         $data = [
-            'postsMarkers' => Post::with('user')->get(['id', 'lat', 'lng']),
+            'postsMarkers' => Post::all(['id', 'lat', 'lng'])->map(function ($post) {
+                return [ // to not include appended attributes in Post model
+                    'id' => $post->id,
+                    'lat' => $post->lat,
+                    'lng' => $post->lng,
+                ];
+            }),
             'can' => [],
         ];
 
@@ -116,10 +122,14 @@ class PostController extends Controller
 
         // add if rating is the same it would be deleted
         try {
-            PostReaction::updateOrCreate(
-                ['post_id' => $post->id, 'user_id' => auth()->id()],
-                ['rating' => $data['rating']]
-            );
+            if ($post->user_rating == $data['rating']) {
+                PostReaction::where('post_id', $post->id)->where('user_id', auth()->id())->delete();
+            } else {
+                PostReaction::updateOrCreate(
+                    ['post_id' => $post->id, 'user_id' => auth()->id()],
+                    ['rating' => $data['rating']]
+                );
+            }
         } catch (\Exception $e) {
             return back()->with([
                 'error' => 'Rate failed: ' . $e->getMessage()

@@ -5,6 +5,8 @@ import Avatar from "@/Components/Avatar.vue";
 import GoogleMapComponent from "@/Components/GoogleMapOneMarkerComponent.vue";
 import Menu from "primevue/menu";
 import {Link, router} from "@inertiajs/vue3";
+import {toNumber} from "@vue/shared";
+import StarsScale from "@/Components/StarsScale.vue";
 
 const props = defineProps({
     post: {
@@ -91,11 +93,8 @@ const sharePost = (id) => {
     console.log('Share post', id);
 };
 
-const userRating = ref(0);
-const hoverRating = ref(0);
 
 const ratePost = (rating) => {
-    userRating.value = rating;
     console.log('Rating:', rating);
     // Send rating to backend and update post average rating
     router.post(`/posts/${props.post.id}/rate`, {
@@ -161,29 +160,24 @@ const ratePost = (rating) => {
             </div>
 
             <div class="post-info">
-                <div class="info-item">
-                    <BIconGeoAlt class="info-icon" />
-                    <span>{{ post.location }}</span>
-                </div>
-                <div class="info-item">
-                    <BIconCalendar class="info-icon" />
-                    <span>{{ post.created_at }}</span>
-                </div>
-                <div class="info-item rating">
-                    <div class="star-container">
-                        <i
-                           v-for="star in 5"
-                           :key="star"
-                           :class="[
-                               star <= (hoverRating || post.average_rating || 0)
-                                   ? 'pi pi-star-fill star-filled'
-                                   : 'pi pi-star'
-                               ]"
-                           @click="ratePost(star)"
-                           @mouseenter="hoverRating = star"
-                           @mouseleave="hoverRating = 0"></i>
+                <div class="info-row">
+                    <div class="info-item">
+                        <BIconGeoAlt class="info-icon" />
+                        <span>{{ post.location }}</span>
                     </div>
-                    <span v-if="post.average_rating" class="rating-text">({{ post.average_rating }})</span>
+                    <div class="info-item">
+                        <BIconCalendar class="info-icon" />
+                        <span>{{ post.created_at }}</span>
+                    </div>
+                </div>
+
+                <div class="info-row">
+                    <StarsScale
+                        :averageRating="post.average_rating"
+                        :votesCount="post.votes_count"
+                        :userRating="post.user_rating"
+                        @updateRating="ratePost"
+                    />
                 </div>
             </div>
 
@@ -335,13 +329,22 @@ const ratePost = (rating) => {
 
 .post-info {
     display: flex;
-    flex-wrap: wrap;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    width: 100%;
     margin-bottom: 20px;
     gap: 16px;
 }
 
+.info-row {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
 .info-item {
     display: flex;
+    flex-direction: row;
     align-items: center;
     color: #666;
     font-size: 0.9rem;
@@ -390,30 +393,6 @@ const ratePost = (rating) => {
     line-height: 1.6;
 }
 
-/* RATING STYLES */
 
-.rating {
-    display: flex;
-    align-items: center;
-    margin-left: auto;
-}
 
-/* Update these styles */
-.star-container {
-    display: flex;
-}
-
-.pi-star,
-.pi-star-fill {
-    color: #ddd;
-    cursor: pointer;
-    font-size: 1.2rem;
-    margin-right: 2px;
-    transition: color 0.2s;
-}
-
-.pi-star.star-filled,
-.pi-star-fill.star-filled {
-    color: #ffc107;
-}
 </style>

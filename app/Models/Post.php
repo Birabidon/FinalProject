@@ -19,6 +19,12 @@ class Post extends Model
         'created_by'
     ];
 
+    protected $casts = [
+        'created_at' => 'date:d-M-Y',
+        'updated_at' => 'date:d-M-Y',
+        'deleted_at' => 'date:d-M-Y',
+    ];
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'created_by');
@@ -44,6 +50,10 @@ class Post extends Model
         return $this->reactions()->where('user_id', $userId)->value('rating');
     }
 
+    public function getVotesCountAttribute() {
+        return $this->reactions()->count();
+    }
+
     // $appends to include them in JSON/arrays
-    protected $appends = ['average_rating', 'user_rating'];
+    protected $appends = ['average_rating', 'user_rating', 'votes_count'];
 }
