@@ -28,7 +28,14 @@ const markerPosition = ref({
 watch(markerPosition, (newPosition) => {
     form.lat = newPosition.lat;
     form.lng = newPosition.lng;
-});
+
+    // Get location name using geocoder
+    if (geocoder.value) {
+        changeLocationName(markerPosition.value);
+    }
+},
+    { deep: true }
+);
 
 // Handle map click to reposition marker
 const handleMapClick = (e) => {
@@ -37,10 +44,6 @@ const handleMapClick = (e) => {
         lng: e.latLng.lng()
     };
 
-    // Get location name using geocoder
-    if (geocoder.value) {
-        getLocationName(markerPosition.value);
-    }
 };
 
 // Geocoder functionality
@@ -49,7 +52,7 @@ const initGeocoder = (Api) => {
     geocoder.value = new Api.Geocoder();
 };
 
-const getLocationName = (latlng) => {
+const changeLocationName = (latlng) => {
     geocoder.value.geocode(
         {
             location: latlng,
