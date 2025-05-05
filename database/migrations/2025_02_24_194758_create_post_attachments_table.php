@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('file_path');
             $table->string('file_type');
             $table->foreignId('created_by')->constrained('users');
-            $table->timestamps();
+            $table->timestamp('created_at')->useCurrent();
         });
     }
 

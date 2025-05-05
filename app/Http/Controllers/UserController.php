@@ -49,8 +49,8 @@ class UserController extends Controller
         $can = [
             'edit' =>
                 Auth::user() ?
-                    $user->can('isSelf', User::class) || Auth::user()->isAdmin() : // if user is logged in, check if user can edit user (if he is an admin), by update function in UserPolicy.php
-                    null,
+                    Auth::user()->can('update', $user) : // if user is logged in, check if user can edit user (if he is an admin), by update function in UserPolicy.php
+                    false
         ];
 
         $data = [
@@ -135,6 +135,17 @@ class UserController extends Controller
     public function destroy(User $user)
     {
         try {
+            if ($user->avatar) {
+                Storage::disk('public')->delete($user->avatar);
+            }
+
+            $user->posts->each(function($post) {
+                $post->attachments->each(function($attachment) {
+                    $attachment->delete(); // To delete attachments from storage
+                });
+                $post->delete();
+            });
+
             $user->delete();
         } catch (\Exception $e) {
             return redirect()->back()->with(['error' => 'Failed to delete user: ' . $e->getMessage()]);

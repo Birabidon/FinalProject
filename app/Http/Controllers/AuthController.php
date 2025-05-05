@@ -30,7 +30,7 @@ class AuthController extends Controller
         Auth::login($user);
 
         // Redirect
-        return redirect('/')->with('message', 'Welcome to our site!');
+        return redirect('/')->with('success', 'Welcome to our site!');
     }
 
     public function login(Request $request){
@@ -44,7 +44,9 @@ class AuthController extends Controller
             return redirect()->intended('/');
         }
 
-        return back()->withErrors([
+        return back()->with([
+            'error' => 'The provided credentials do not match our records.',
+        ])->withErrors([
             'email' => 'The provided credentials do not match our records.',
         ])->onlyInput('email');
     }

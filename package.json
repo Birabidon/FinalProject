@@ -18,11 +18,24 @@
         "vue": "^3.5.13"
     },
     "dependencies": {
+        "@tiptap/extension-bullet-list": "^2.11.9",
+        "@tiptap/extension-color": "^2.11.9",
+        "@tiptap/extension-image": "^2.11.9",
+        "@tiptap/extension-link": "^2.11.9",
+        "@tiptap/extension-list-item": "^2.11.9",
+        "@tiptap/extension-ordered-list": "^2.11.9",
+        "@tiptap/extension-text-align": "^2.11.9",
+        "@tiptap/extension-text-style": "^2.11.9",
+        "@tiptap/extension-underline": "^2.11.9",
+        "@tiptap/pm": "^2.11.9",
+        "@tiptap/starter-kit": "^2.11.9",
+        "@tiptap/vue-3": "^2.11.9",
         "bootstrap-icons": "^1.11.3",
         "bootstrap-icons-vue": "^1.11.3",
         "lodash": "^4.17.21",
         "primeicons": "^7.0.0",
         "primevue": "^4.3.3",
+        "tiptap-extension-resize-image": "^1.2.2",
         "vue3-google-map": "^0.21.1"
     }
 }

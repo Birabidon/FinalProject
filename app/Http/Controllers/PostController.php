@@ -3,9 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Post;
+use App\Models\PostAttachment;
 use App\Models\PostReaction;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
 class PostController extends Controller
@@ -91,13 +94,71 @@ class PostController extends Controller
             'lat' => ['required', 'numeric'],
             'lng' => ['required', 'numeric'],
             'location' => ['required', 'string', 'max:255'],
+            'images' => [
+                'array',
+                'nullable',
+                'max:10',
+                function ($attribute, $value, $fail) {
+                    // Custom rule to check the total size of all files
+                    $totalSize = collect($value)->sum(fn(UploadedFile $file) => $file->getSize());
+
+                    if ($totalSize > 1024 * 1024 * 1024) {
+                        $fail('The total size of all files must not exceed 1GB.');
+                    }
+                },
+            ],
+            'images.*' => [
+                'image',                          // Ensures it's an image file
+                'mimes:jpeg,png,jpg,gif',         // Restricts file types
+                'max:2048',                       // Limits file size (2MB)
+            ],
         ]);
+
+//        dd($fields);
+
+//        $fields['created_by'] = auth()->id();
+//        $fields['updated_by'] = auth()->id();
+//
+//        Post::create($fields);
 
         $fields['created_by'] = auth()->id();
         $fields['updated_by'] = auth()->id();
 
-        Post::create($fields);
+        // Handle image uploads and replace temp URLs
+        if ($request->hasFile('images')) {
+            $content = $fields['content'];
+            $imagesToSave = [];
 
+            foreach ($request->file('images') as $image) {
+                // Save file to disk
+                $path = Storage::disk('public')->put('attachments', $image);
+
+                // Create attachment record
+                $imagesToSave[] = [
+                    'file_path' => $path,
+                    'file_name' => $image->getClientOriginalName(),
+                    'file_type' => $image->getMimeType(),
+                    'created_by' => auth()->id(),
+                ];
+
+                // Replace temporary URLs in content
+                // This is a simple approach - you might need more specific URL matching
+                $tempUrlPattern = '/blob:http[s]?:\/\/[^\s"\']+/';
+                $content = preg_replace($tempUrlPattern, '/storage/'.$path, $content, 1);
+            }
+
+            $fields['content'] = $content;
+        }
+
+
+        $post = Post::create($fields);
+
+        if (!empty($imagesToSave)) {
+            foreach ($imagesToSave as $image) {
+                $image['post_id'] = $post->id; // Associate the image with the post
+                PostAttachment::create($image);
+            }
+        }
         return redirect()->route('home')->withMessage('Post created successfully');
     }
 
@@ -178,6 +239,13 @@ class PostController extends Controller
     public function destroy(Post $post)
     {
         try {
+            $attachments = $post->attachments()->get();
+
+            foreach ($attachments as $attachment) {
+                // Delete the attachment record from the database
+                $attachment->delete();
+            }
+
             $post->delete();
         } catch (\Exception $e) {
             return redirect()->back()->with(['error' => 'Failed to delete post: ' . $e->getMessage()]);

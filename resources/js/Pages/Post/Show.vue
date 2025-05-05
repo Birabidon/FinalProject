@@ -7,6 +7,7 @@ import Menu from "primevue/menu";
 import {Link, router} from "@inertiajs/vue3";
 import {toNumber} from "@vue/shared";
 import StarsScale from "@/Components/StarsScale.vue";
+import TiptapEditor from "@/Components/TiptapEditor.vue";
 
 const props = defineProps({
     post: {
@@ -177,7 +178,7 @@ const ratePost = (rating) => {
                         :votesCount="post.votes_count"
                         :userRating="post.user_rating"
                         @updateRating="ratePost"
-                        :votable="$page.props.auth.user"
+                        :votable="!!$page.props.auth.user"
                     />
                 </div>
             </div>
@@ -193,17 +194,11 @@ const ratePost = (rating) => {
             </div>
 
             <div class="post-content">
-                <p>{{ post.content }}</p>
-                <!--            <p v-if="showFullContent">{{ post.content }}</p>-->
-                <!--            <p v-else>{{ contentPreview }}</p>-->
-
-                <!--            <button-->
-                <!--                v-if="post.content && post.content.length > 200"-->
-                <!--                @click="toggleContent"-->
-                <!--                class="show-more-btn"-->
-                <!--            >-->
-                <!--                {{ showFullContent ? 'Show Less' : 'Show More' }}-->
-                <!--            </button>-->
+                <TiptapEditor
+                    v-model="post.content"
+                    :editable="false"
+                    :key="post.id" /> <!-- insures that editor is updated after changing post -->
+                />
             </div>
         </div>
     </div>
@@ -392,6 +387,7 @@ const ratePost = (rating) => {
 
 .post-content {
     line-height: 1.6;
+    width: 100%;
 }
 
 

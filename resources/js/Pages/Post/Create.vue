@@ -2,8 +2,8 @@
 import TextInput from "@/Components/TextInput.vue";
 import {useForm} from "@inertiajs/vue3";
 import GoogleMapComponent from "@/Components/GoogleMapOneMarkerComponent.vue";
-import {defineProps} from "vue";
-
+import {defineProps, onBeforeUnmount} from "vue";
+import TiptapEditor from "@/Components/TiptapEditor.vue";
 const props = defineProps({
     location: {
         type: String,
@@ -25,12 +25,19 @@ const form = useForm({
     lat: props.lat,
     lng: props.lng,
     location: props.location,
+    images: [],
+    imageTempUrls: [],
 })
 
 const submit = () => {
     form.post("/posts")
 }
-// tipTap - rich text editor, implement it in the future
+
+const handleImageUpload = ({file, tempUrl}) => {
+    form.images.push(file);
+
+    form.imageTempUrls[tempUrl] = file;
+}
 </script>
 
 <template>
@@ -38,12 +45,16 @@ const submit = () => {
         <h2>Create a new post</h2>
         <form @submit.prevent="submit">
             <TextInput name="Post title" v-model="form.title" :message="form.errors.title"/>
-            <label for="content">Post content</label>
-            <textarea
-                name="content"
-                v-model="form.content">
+            <TiptapEditor
+                v-model="form.content"
+                @imageUpload="handleImageUpload"
+            />
+            <div v-if="form.errors.content" class="error-message">{{ form.errors.content }}</div>
+<!--            <textarea-->
+<!--                name="content"-->
+<!--                v-model="form.content">-->
 
-            </textarea>
+<!--            </textarea>-->
             <button type="submit" :disabled="form.processing">Create</button>
         </form>
 
@@ -58,7 +69,72 @@ const submit = () => {
 </template>
 
 <style scoped>
+div {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+}
 
+h2 {
+    font-size: 28px;
+    margin-bottom: 20px;
+    color: #333;
+    border-bottom: 2px solid #4f46e5;
+    padding-bottom: 10px;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+/* Style specifically for the TiptapEditor container */
+:deep(.editor-wrapper) {
+    margin-bottom: 10px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    border-radius: 6px;
+}
+
+button[type="submit"] {
+    background-color: #4f46e5;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 12px 20px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    align-self: flex-start;
+    transition: background-color 0.2s;
+}
+
+button[type="submit"]:hover {
+    background-color: #4338ca;
+}
+
+button[type="submit"]:disabled {
+    background-color: #a5a5a5;
+    cursor: not-allowed;
+}
+
+.error-message {
+    color: #dc2626;
+    font-size: 14px;
+    margin-top: -15px;
+}
+
+/* Make the map container have a defined height */
+:deep(.google-map) {
+    height: 300px;
+    width: 100%;
+    margin-top: 20px;
+    border-radius: 6px;
+    overflow: hidden;
+    border: 1px solid #ddd;
+}
 </style>
 
 <!--
