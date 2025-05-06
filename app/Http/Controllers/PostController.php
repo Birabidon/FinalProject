@@ -222,9 +222,69 @@ class PostController extends Controller
             'lat' => ['required', 'numeric'],
             'lng' => ['required', 'numeric'],
             'location' => ['required', 'string', 'max:255'],
+            'images' => [
+                'array',
+                'nullable',
+                'max:10',
+                function ($attribute, $value, $fail) {
+                    // Custom rule to check the total size of all files
+                    $totalSize = collect($value)->sum(fn(UploadedFile $file) => $file->getSize());
+
+                    if ($totalSize > 1024 * 1024 * 1024) {
+                        $fail('The total size of all files must not exceed 1GB.');
+                    }
+                },
+            ],
+            'images.*' => [
+                'image',                          // Ensures it's an image file
+                'mimes:jpeg,png,jpg,gif',         // Restricts file types
+                'max:2048',                       // Limits file size (2MB)
+            ],
         ]);
 
+        // If there is no file url in content, remove attachment
+        foreach($post->attachments()->get() as $attachment) {
+            $filename = basename($attachment->file_path);
+            $pattern = 'src="/storage/' . $attachment->file_path . '"';
+
+            if (!str_contains($fields['content'], $pattern)) {
+                $attachment->delete();
+            }
+        }
+
+        // Handle image uploads and replace temp URLs
+        if ($request->hasFile('images')) {
+            $content = $fields['content'];
+            $imagesToSave = [];
+
+            foreach ($request->file('images') as $image) {
+                // Save file to disk
+                $path = Storage::disk('public')->put('attachments', $image);
+
+                // Create attachment record
+                $imagesToSave[] = [
+                    'file_path' => $path,
+                    'file_name' => $image->getClientOriginalName(),
+                    'file_type' => $image->getMimeType(),
+                    'created_by' => auth()->id(),
+                ];
+
+                // Replace temporary URLs in content
+                $tempUrlPattern = '/blob:http[s]?:\/\/[^\s"\']+/';
+                $content = preg_replace($tempUrlPattern, '/storage/'.$path, $content, 1);
+            }
+
+            $fields['content'] = $content;
+        }
+
         $isUpdated = $post->update($fields);
+
+        if (!empty($imagesToSave)) {
+            foreach ($imagesToSave as $image) {
+                $image['post_id'] = $post->id; // Associate the image with the post
+                PostAttachment::create($image);
+            }
+        }
 
         if($isUpdated) {
             return redirect()->route('posts.show', $post)->with(['success' => 'Changes saved successfully']);

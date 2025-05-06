@@ -8,6 +8,7 @@ import {Link, router} from "@inertiajs/vue3";
 import {toNumber} from "@vue/shared";
 import StarsScale from "@/Components/StarsScale.vue";
 import TiptapEditor from "@/Components/TiptapEditor.vue";
+import UserAvatar from "@/Components/User/UserAvatar.vue";
 
 const props = defineProps({
     post: {
@@ -133,8 +134,7 @@ const ratePost = (rating) => {
         <div class="post-container">
             <div class="post-header">
                 <div class="post-user">
-                    <Avatar :avatar="post.user.avatar" :alt="post.user.name" />
-                    <h2 class="post-author">{{ post.user.name }}</h2>
+                    <UserAvatar :user="post.user" size="4rem" />
                 </div>
                 <h1 class="post-title">{{ post.title }}</h1>
 
@@ -174,9 +174,9 @@ const ratePost = (rating) => {
 
                 <div class="info-row">
                     <StarsScale
-                        :averageRating="post.average_rating"
-                        :votesCount="post.votes_count"
-                        :userRating="post.user_rating"
+                        :averageRating="parseInt(post.average_rating)"
+                        :votesCount="parseInt(post.votes_count)"
+                        :userRating="parseInt(post.user_rating)"
                         @updateRating="ratePost"
                         :votable="!!$page.props.auth.user"
                     />
@@ -197,8 +197,8 @@ const ratePost = (rating) => {
                 <TiptapEditor
                     v-model="post.content"
                     :editable="false"
-                    :key="post.id" /> <!-- insures that editor is updated after changing post -->
-                />
+                    :key="post.id"
+                /> <!-- insures that editor is updated after changing post -->
             </div>
         </div>
     </div>

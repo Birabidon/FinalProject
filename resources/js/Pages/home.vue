@@ -4,13 +4,11 @@ import {ref, onMounted, defineProps, onBeforeUnmount} from 'vue';
 import { AdvancedMarker, InfoWindow } from 'vue3-google-map';
 import {Link, router} from '@inertiajs/vue3';
 import GoogleMapComponent from "@/Components/GoogleMapComponent.vue";
-import MarkerDetailsModal from "@/Components/MarkerDetailsModal.vue";
+import MarkerDetailsModal from "@/Components/Posts/MarkerDetailsModal.vue";
 import ShowPost from "@/Pages/Post/Show.vue";
 
 // Dropdown menu:  https://www.youtube.com/watch?v=mQJTGDI6noE&list=PLLQuc_7jk__Wa8IoZ2s0J-ql_MIisndtZ&index=10&ab_channel=TheCodeholic (0:00 - 10:00)
 
-
-// TODO: Make that postMarkers would be only posts location and to get details must be done request to the server
 
 const props = defineProps({
     postsMarkers: {
@@ -160,7 +158,7 @@ const handleShowMore = () => {
     <div @click="handleMapClick" class="map-container">
         <GoogleMapComponent
             ref="mapRef"
-            :markers="props.postsMarkers"
+            :markers="postsMarkers"
             :center="{ lat: 56.9496, lng: 24.1052 }"
             :zoom="10"
             :disableDoubleClickZoom="true"
@@ -196,12 +194,11 @@ const handleShowMore = () => {
         <MarkerDetailsModal
             v-if="post"
             :is-open="isModalOpen"
-            :marker="post"
+            :post="post"
             @close="closeModal"
             @showMore="handleShowMore"
         />
     </div>
-
     <div class="post-preview" ref="postPreviewRef">
         <ShowPost
             v-if="post"

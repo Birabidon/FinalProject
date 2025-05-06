@@ -1,18 +1,31 @@
 <script setup>
 import { defineProps } from 'vue';
+import { Link } from '@inertiajs/vue3';
 
 const props = defineProps(
     {
-        avatar: String,
+        path: String,
         alt: String,
-        url: Boolean
+        url: Boolean,
     }
 );
 </script>
 
 <template>
     <img
-        :src="avatar ? (url ? avatar : ('/storage/' + avatar)) : ('/storage/avatars/default.jpg')"
+        :src="path ? (url ? path : ('/storage/' + path)) : ('/storage/avatars/default.jpg')"
         :alt="alt || 'avatar'"
         class="avatar">
 </template>
+
+<style>
+.avatar {
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    overflow: hidden;
+    object-position: center;
+    object-fit: cover;
+    border: 2px solid #000000;
+}
+</style>

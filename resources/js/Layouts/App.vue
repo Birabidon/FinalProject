@@ -1,6 +1,7 @@
 <script setup>
 import {Link} from '@inertiajs/vue3'
 import Avatar from '@/Components/Avatar.vue'
+import UserAvatar from "@/Components/User/UserAvatar.vue";
 
 // To run your project on another PC using Git, follow these steps:
 //     Clone the Repository: Clone the repository to your local machine.
@@ -36,13 +37,7 @@ import Avatar from '@/Components/Avatar.vue'
             <p>Hello, {{ $page.props.auth.user?.name }}</p>
         </div>
         <div class="account space-x-6 flex">
-            <Link :href="`/users/${$page.props.auth.user?.id}`">
-                <Avatar :avatar="$page.props.auth.user.avatar" :alt="$page.props.user?.name"/>
-            </Link>
-<!--            <img-->
-<!--                :src="$page.props.auth.user?.avatar ? ('storage/' + $page.props.auth.user?.avatar) : ('/storage/avatars/default.jpg')"-->
-<!--                alt="avatar"-->
-<!--               class="avatar">-->
+            <UserAvatar :user="$page.props.auth.user" size="2.5rem"/>
             <Link
                 href="/logout"
                 method="POST"

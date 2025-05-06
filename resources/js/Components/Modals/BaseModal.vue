@@ -2,6 +2,10 @@
 // import AppIcon from "@/Components/AppIcon.vue";
 import {BIconXLg} from "bootstrap-icons-vue";
 
+// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+// This component is not used anywhere, but mb I will need it later so why not left it here
+// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
 const emit = defineEmits(["close"]);
 
 function closeModal() {

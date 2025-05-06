@@ -11,6 +11,7 @@ body {
     display: grid;
     grid-template-rows: 10vh 90vh auto;
     min-height: 100vh;
+    font-family: "Poppins", sans-serif;
 }
 
 header, main, footer {
@@ -75,50 +76,9 @@ main {
     font-weight: bold;
 }
 
-/* Styles for registerModal */
-.modal h1 {
-    font-size: 24px;
-    margin-bottom: 20px;
-}
-
-.modal form {
-    display: flex;
-    flex-direction: column;
-}
-
-.modal label {
-    margin-bottom: 5px;
-    font-weight: bold;
-}
-
-.modal input {
-    margin-bottom: 15px;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-}
-
-.modal button {
-    padding: 10px 20px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-}
-
-.modal button:hover {
-    background-color: #0056b3;
-}
 
 /* I stole this style from tutorial guy, I have no idea whats going on there */
 
-
-@layer base {
-    body {
-        font-family: "Poppins", sans-serif;
-    }
-}
 
 @layer components {
     input[type="text"],
@@ -167,9 +127,6 @@ main {
     }
     td {
         @apply px-6 py-4 border-b border-slate-100;
-    }
-    .avatar {
-        @apply w-8 h-8 rounded-full overflow-hidden object-center object-cover;
     }
     .round-btn {
         @apply w-8 h-8 overflow-auto rounded-full bg-slate-100 focus:outline-none focus:ring-1 focus:ring-slate-100 focus:ring-offset-2 focus:ring-offset-slate-800;

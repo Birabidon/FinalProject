@@ -53,9 +53,8 @@ const editor = useEditor({
         },
     },
     editable: props.editable,
-    onUpdate: ({ editor }) => {
+    onUpdate: ({ editor, transaction }) => {
         const html = editor.getHTML();
-        console.log('Editor content updated:', html);
         emit('update:modelValue', html);
     },
 });
@@ -84,13 +83,6 @@ const setLink = () => {
         editor.value?.chain().focus().setLink({ href: url }).run();
     } else {
         editor.value?.chain().focus().unsetLink().run();
-    }
-}
-
-const addImage = () => {
-    const url = window.prompt('URL');
-    if (url) {
-        editor.value?.chain().focus().setImage({ src: url }).run();
     }
 }
 

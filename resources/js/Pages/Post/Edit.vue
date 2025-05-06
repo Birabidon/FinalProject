@@ -3,6 +3,7 @@ import { ref, watch, onMounted } from 'vue';
 import { useForm, Link } from '@inertiajs/vue3';
 import GoogleMapComponent from '@/Components/GoogleMapComponent.vue';
 import { AdvancedMarker } from 'vue3-google-map';
+import TiptapEditor from "@/Components/TiptapEditor.vue";
 
 const props = defineProps({
     post: {
@@ -17,6 +18,8 @@ const form = useForm({
     location: props.post.location,
     lat: props.post.lat,
     lng: props.post.lng,
+    images: [],
+    imageTempUrls: [],
 });
 
 const markerPosition = ref({
@@ -67,8 +70,16 @@ const changeLocationName = (latlng) => {
 };
 
 const submit = () => {
-    form.put(`/posts/${props.post.id}`);
+    console.log(form)
+    form.post(`/posts/${props.post.id}`);
 };
+
+const handleImageUpload = ({file, tempUrl}) => {
+    form.images.push(file);
+
+    form.imageTempUrls[tempUrl] = file;
+    console.log(form);
+}
 </script>
 
 <template>
@@ -91,14 +102,18 @@ const submit = () => {
             </div>
 
             <div class="form-group">
-                <label for="content" class="form-label">Content</label>
-                <textarea
-                    id="content"
+                <label class="form-label">Content</label>
+<!--                <textarea-->
+<!--                    id="content"-->
+<!--                    v-model="form.content"-->
+<!--                    class="form-textarea"-->
+<!--                    rows="6"-->
+<!--                    required-->
+<!--                ></textarea>-->
+                <TiptapEditor
                     v-model="form.content"
-                    class="form-textarea"
-                    rows="6"
-                    required
-                ></textarea>
+                    @imageUpload="handleImageUpload"
+                />
                 <div v-if="form.errors.content" class="error-message">{{ form.errors.content }}</div>
             </div>
 

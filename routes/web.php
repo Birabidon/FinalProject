@@ -18,7 +18,9 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('locations', LocationController::class);
 
-    Route::resource('posts', PostController::class);
+    Route::resource('posts', PostController::class)->except('update');
+
+    Route::post('/posts/{post}', [PostController::class, 'update'])->name('posts.update');
 
     Route::post('/posts/{post}/rate', [PostController::class, 'rate'])->name('posts.react');
 
