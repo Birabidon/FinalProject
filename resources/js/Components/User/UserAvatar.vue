@@ -54,7 +54,7 @@ const userNameStyle = computed(() => {
     display: flex;
     flex-direction: row;
     align-items: center;
-    gap: 12px;
+    gap: 5px;
     text-decoration: none;
 }
 

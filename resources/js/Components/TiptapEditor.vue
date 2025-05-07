@@ -75,7 +75,6 @@ const toggleOrderedList = () => editor.value?.chain().focus().toggleOrderedList(
 const alignLeft = () => editor.value?.chain().focus().setTextAlign('left').run();
 const alignCenter = () => editor.value?.chain().focus().setTextAlign('center').run();
 const alignRight = () => editor.value?.chain().focus().setTextAlign('right').run();
-const alignJustify = () => editor.value?.chain().focus().setTextAlign('justify').run();
 
 const setLink = () => {
     const url = window.prompt('URL');
@@ -154,9 +153,6 @@ onBeforeUnmount(() => {
                 </button>
                 <button type="button" @click="alignRight" :class="{ active: isActive('textAlign', { align: 'right' }) }" title="Align Right">
                     Right
-                </button>
-                <button type="button" @click="alignJustify" :class="{ active: isActive('textAlign', { align: 'justify' }) }" title="Justify">
-                    Justify
                 </button>
             </div>
 

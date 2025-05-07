@@ -71,16 +71,18 @@ class PostController extends Controller
     public function create(Request $request)
     {
         $fields = $request->validate([
-            'location' => ['required', 'string', 'max:255'],
-            'lat' => ['required', 'numeric'],
-            'lng' => ['required', 'numeric'],
+            'location' => ['sometimes', 'string', 'max:255', 'nullable'],
+            'lat' => ['sometimes', 'numeric', 'nullable'],
+            'lng' => ['sometimes', 'numeric', 'nullable'],
         ]);
 
-        return inertia('Post/Create', [
-            'location' => $fields['location'],
-            'lat' => (float)$fields['lat'],
-            'lng' => (float)$fields['lng']
-        ]);
+        $data = [];
+
+        if (isset($fields['location'])) $data['location'] = $fields['location'];
+        if (isset($fields['lat'])) $data['lat'] = (float)$fields['lat'];
+        if (isset($fields['lng'])) $data['lng'] = (float)$fields['lng'];
+
+        return inertia('Post/Create', $data);
     }
 
     /**

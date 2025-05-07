@@ -69,7 +69,7 @@ const handleRedirect = (tab) => {
                 <h1>{{ user.name }}</h1>
             </div>
             <div class="buttons-container" v-if="can.edit">
-                <Link class="create-post" href="/">Create Post</Link>
+                <Link class="create-post" href="/posts/create">Create Post</Link>
                 <Link class="edit-profile" :href="`/users/${user.id}/edit`">Edit Profile</Link>
             </div>
         </div>

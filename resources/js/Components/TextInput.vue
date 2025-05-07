@@ -13,6 +13,10 @@ defineProps({
         type: String,
         default: "text"
     },
+    placeholder: {
+        type: String,
+        default: "Enter text"
+    },
     message: String
 })
 </script>
@@ -20,11 +24,13 @@ defineProps({
 <template>
     <div class="mb-6">
         <label>{{ name }}</label>
-        <input :type="type" v-model="model" :class="{'!ring-red-500' : message}">
+        <input :type="type" v-model="model" :class="{'red' : message}" :placeholder="placeholder">
         <small class="error" v-if="message">{{ message }}</small>
     </div>
 </template>
 
 <style scoped>
-
+.red {
+    color: rgb(239, 68, 68);
+}
 </style>

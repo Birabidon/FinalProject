@@ -49,7 +49,6 @@ const handleMapClick = (e) => {
 
 };
 
-// Geocoder functionality
 const geocoder = ref(null);
 const initGeocoder = (Api) => {
     geocoder.value = new Api.Geocoder();
@@ -103,13 +102,6 @@ const handleImageUpload = ({file, tempUrl}) => {
 
             <div class="form-group">
                 <label class="form-label">Content</label>
-<!--                <textarea-->
-<!--                    id="content"-->
-<!--                    v-model="form.content"-->
-<!--                    class="form-textarea"-->
-<!--                    rows="6"-->
-<!--                    required-->
-<!--                ></textarea>-->
                 <TiptapEditor
                     v-model="form.content"
                     @imageUpload="handleImageUpload"
@@ -190,28 +182,21 @@ const handleImageUpload = ({file, tempUrl}) => {
 
 <style scoped>
 .container {
-    max-width: 1200px;
+    max-width: 900px;
     margin: 0 auto;
     padding: 2rem 1rem;
 }
 
 .header-section {
     margin-bottom: 2rem;
+    border-bottom: 2px solid #4f46e5;
+    padding-bottom: 10px;
 }
 
 .page-title {
     font-size: 1.5rem;
     font-weight: 700;
     margin-bottom: 0.5rem;
-}
-
-.back-link {
-    color: #3b82f6;
-    text-decoration: none;
-}
-
-.back-link:hover {
-    text-decoration: underline;
 }
 
 .edit-form {
