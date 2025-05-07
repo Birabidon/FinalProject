@@ -47,7 +47,7 @@ const emit = defineEmits(['updateRating']);
                     ></i>
                 </i>
             </div>
-            <span class="rating-text">({{ averageRating ? parseFloat(averageRating).toFixed(2) : '0.00' }})</span>
+            <span class="rating-text">({{ averageRating ? averageRating.toFixed(2) : '0.00' }})</span>
         </div>
         <span class="votes-count">votes: {{ votesCount }}</span>
     </div>

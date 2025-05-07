@@ -107,26 +107,6 @@ const ratePost = (rating) => {
     });
 };
 
-// const ratePost = (rating) => {
-//     userRating.value = rating;
-//     isSubmitting.value = true;
-//
-//     router.post(`/posts/${props.post.id}/rate`,
-//         { rating },
-//         {
-//             preserveState: true,
-//             onSuccess: (page) => {
-//                 if (page.props.flash?.success) {
-//                     props.post.average_rating = page.props.flash.average_rating;
-//                     ratingSuccess.value = true;
-//                     setTimeout(() => ratingSuccess.value = false, 2000);
-//                 }
-//             },
-//             onFinish: () => isSubmitting.value = false
-//         }
-//     );
-// };
-
 </script>
 
 <template>
@@ -174,7 +154,7 @@ const ratePost = (rating) => {
 
                 <div class="info-row">
                     <StarsScale
-                        :averageRating="parseInt(post.average_rating)"
+                        :averageRating="parseFloat(post.average_rating)"
                         :votesCount="parseInt(post.votes_count)"
                         :userRating="parseInt(post.user_rating)"
                         @updateRating="ratePost"
