@@ -77,8 +77,8 @@ const handleRedirect = (tab) => {
         <div class="nav-bar">
             <button @click.prevent="handleRedirect('posts')" :class="['nav-link', currentTab === 'posts' ? 'active' : '']">Posts</button>
             <button  @click.prevent="handleRedirect('info')" :class="['nav-link', currentTab === 'info' ? 'active' : '']">Info</button>
+            <button  @click.prevent="handleRedirect('rates')" :class="['nav-link', currentTab === 'rates' ? 'active' : '']">Rates</button>
             <Link href="/comments" class="nav-link">Comments</Link>
-            <Link href="/likes" class="nav-link">Likes</Link>
             <Link href="/friends" class="nav-link">Friends</Link>
             <Link href="/photos" class="nav-link">Photos</Link>
         </div>
@@ -149,7 +149,32 @@ const handleRedirect = (tab) => {
                     </div>
                 </div>
             </div>
-            <!-- Content that changes based on nav-bar selection -->
+
+            <div
+                v-if="currentTab === 'posts'"
+                class="posts-container"
+            >
+
+                <div>
+                    <div class="search-container">
+                        <SearchBar
+                            :searchTerm="searchTerm"
+                            @search="handleSearch"
+                        />
+                    </div>
+
+                    <div v-if="posts.length === 0" class="empty-state">
+                        {{ searchTerm ? 'No posts matching your search.' : 'No posts yet.' }}
+                    </div>
+
+                    <PostCard
+                        v-if="posts"
+                        v-for="post in posts"
+                        :key="post.id"
+                        :post="post"
+                    />
+                </div>
+            </div>
         </div>
 
 

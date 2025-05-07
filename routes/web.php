@@ -41,6 +41,8 @@ Route::middleware('auth')->group(function () {
         Route::post('/users/{user}', [UserController::class, 'update'])->name('users.update');
         Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
     });
+
+    Route::get('/users/{user}/posts', [\App\Http\Controllers\ProfileController::class, 'getUserPosts'])->name('user.posts');
 });
 
 Route::middleware('guest')->group(function () {

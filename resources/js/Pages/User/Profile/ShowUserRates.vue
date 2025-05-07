@@ -7,10 +7,6 @@ const props = defineProps({
     user: Object,
     posts: Object
 });
-
-defineOptions({
-    layout: ProfilePage
-});
 </script>
 
 <template>
