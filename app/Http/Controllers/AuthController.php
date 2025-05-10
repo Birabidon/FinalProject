@@ -19,17 +19,31 @@ class AuthController extends Controller
             'password' => ['required', 'string', 'min:3', 'confirmed'],
         ]);
 
+        $avatarPath = null;
+
         if ($request->hasFile('avatar')) {
-            $fields['avatar'] = Storage::disk('public')->put('avatars', $request->avatar);
+            $avatarPath = Storage::disk('public')->put('avatars', $request->avatar);
+
+            $fields['avatar'] = $avatarPath;
         }
 
-        // Register
-        $user = User::create($fields);
+        try {
+            // Register
+            $user = User::create($fields);
 
-        // Login
-        Auth::login($user);
+            // Login
+            Auth::login($user);
+        } catch (\Exception $exception) {
+            // Delete the uploaded avatar if user creation failed
+            if ($avatarPath && Storage::disk('public')->exists($avatarPath)) {
+                Storage::disk('public')->delete($avatarPath);
+            }
 
-        // Redirect
+            return redirect()->back()->with([
+                'error' => 'Failed to register user. Please try again later.',
+            ]);
+        }
+
         return redirect('/')->with('success', 'Welcome to our site!');
     }
 
@@ -39,26 +53,36 @@ class AuthController extends Controller
             'password' => ['required'],
         ]);
 
-        if (Auth::attempt($fields, $request->remember)) {
-            $request->session()->regenerate();
-            return redirect()->intended('/');
-        }
 
-        return back()->with([
-            'error' => 'The provided credentials do not match our records.',
-        ])->withErrors([
-            'email' => 'The provided credentials do not match our records.',
-        ])->onlyInput('email');
+        try {
+            if (Auth::attempt($fields, $request->remember)) {
+                $request->session()->regenerate();
+                return redirect()->intended('/');
+            }
+
+            return back()->with([
+                'error' => 'The provided credentials do not match our records.',
+            ])->withErrors([
+                'email' => 'The provided credentials do not match our records.',
+            ])->onlyInput('email');
+        } catch (\Exception $e) {
+            return back()->with([
+                'error' => 'Login failed: ' . $e->getMessage(),
+            ]);
+        }
     }
 
     public function logout(Request $request){
-        Auth::logout();
+        try {
+            Auth::logout();
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
 
-        $request->session()->invalidate(); // Destroy the whole session
-
-        $request->session()->regenerateToken(); // Regenerate the CSRF token
-
-        return redirect('/');
-    }
+            return redirect('/');
+        } catch (\Exception $e) {
+            return redirect('/')->with([
+                'error' => 'Logout failed: ' . $e->getMessage(),
+            ]);
+        }
 
 }

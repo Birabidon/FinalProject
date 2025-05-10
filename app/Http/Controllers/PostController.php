@@ -152,15 +152,19 @@ class PostController extends Controller
             $fields['content'] = $content;
         }
 
+        try {
+            $post = Post::create($fields);
 
-        $post = Post::create($fields);
-
-        if (!empty($imagesToSave)) {
-            foreach ($imagesToSave as $image) {
-                $image['post_id'] = $post->id; // Associate the image with the post
-                PostAttachment::create($image);
+            if (!empty($imagesToSave)) {
+                foreach ($imagesToSave as $image) {
+                    $image['post_id'] = $post->id; // Associate the image with the post
+                    PostAttachment::create($image);
+                }
             }
+        } catch (\Exception $e) {
+            return redirect()->back()->with(['error' => 'Failed to create post: ' . $e->getMessage()]);
         }
+
         return redirect()->route('home')->withMessage('Post created successfully');
     }
 
@@ -188,9 +192,15 @@ class PostController extends Controller
             if ($post->user_rating == $data['rating']) {
                 PostReaction::where('post_id', $post->id)->where('user_id', auth()->id())->delete();
             } else {
-                PostReaction::updateOrCreate(
-                    ['post_id' => $post->id, 'user_id' => auth()->id()],
-                    ['rating' => $data['rating']]
+                PostReaction::where('post_id', $post->id)
+                    ->where('user_id', auth()->id())
+                    ->delete(); // delete old rating if exists
+
+                PostReaction::create(
+                    [
+                        'post_id' => $post->id, 'user_id' => auth()->id(),
+                        'rating' => $data['rating']
+                    ]
                 );
             }
         } catch (\Exception $e) {
@@ -308,10 +318,14 @@ class PostController extends Controller
                 $attachment->delete();
             }
 
-            $post->delete();
+            $isDeleted = $post->delete();
         } catch (\Exception $e) {
             return redirect()->back()->with(['error' => 'Failed to delete post: ' . $e->getMessage()]);
         }
-        return redirect()->route('home')->with(['success' => 'Post deleted successfully']);
+        if ($isDeleted) {
+            return redirect()->route('home')->with(['success' => 'Post deleted successfully']);
+        } else {
+            return redirect()->back()->with(['error' => 'Failed to delete post']);
+        }
     }
 }

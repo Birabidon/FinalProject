@@ -146,11 +146,15 @@ class UserController extends Controller
                 $post->delete();
             });
 
-            $user->delete();
+            $isDeleted = $user->delete();
         } catch (\Exception $e) {
             return redirect()->back()->with(['error' => 'Failed to delete user: ' . $e->getMessage()]);
             // return response()->json(['error' => 'Failed to delete user: ' . $e->getMessage()], 500); // more for API
         }
-        return redirect()->route('home')->with(['success' => 'User deleted successfully']);
+        if ($isDeleted) {
+            return redirect()->route('home')->with(['success' => 'User deleted successfully']);
+        } else {
+            return redirect()->back()->with(['error' => 'Failed to delete user']);
+        }
     }
 }
