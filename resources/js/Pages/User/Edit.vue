@@ -77,7 +77,7 @@ const submit = () => {
                 <div class="avatar-container">
                     <input type="file" id="avatar" @input="change" hidden>
 
-                    <Avatar :avatar="preview ? preview : user.avatar" alt="Avatar preview" :url="!!preview"/>
+                    <Avatar :path="preview ? preview : user.avatar" alt="Avatar preview" :url="!!preview"/>
                 </div>
                 <h1>{{ user.name }}</h1>
             </div>

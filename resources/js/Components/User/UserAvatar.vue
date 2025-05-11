@@ -40,7 +40,7 @@ const userNameStyle = computed(() => {
     <Link class="user-avatar-container" :href="`/users/${user.id}`">
         <div class="avatar-wrapper" :style="{ width: size, height: size }">
             <Avatar
-                :avatar="user.avatar"
+                :path="user.avatar"
                 :link="`/users/${user.id}`"
                 :alt="user.name"
             />

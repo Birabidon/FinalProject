@@ -14,9 +14,12 @@
         avatar: null,
         preview: null,
     })
+
     const change = (e) => {
-        form.avatar = e.target.files[0]; // get the first file from the file input
-        form.preview = URL.createObjectURL(form.avatar); // create a url for the file
+        if (e.target.files.length > 0) { // check if there are files in the input
+            form.avatar = e.target.files[0]; // get the first file from the file input
+            form.preview = URL.createObjectURL(form.avatar); // create a url for the file
+        }
     }
 
     const submit = () => {
@@ -42,7 +45,11 @@
                     </label>
                     <input type="file" id="avatar" @input="change" hidden>
 
-                    <Avatar :avatar="form.preview" alt="Avatar preview" :url="true"/>
+                    <Avatar
+                        :path="form.preview"
+                        alt="Avatar preview"
+                        :url="true"
+                        class="w-full h-full object-cover object-center"/>
 <!--                    <img :src="form.preview ?? 'storage/avatars/default.jpg'" alt="preview">-->
                 </div>
 

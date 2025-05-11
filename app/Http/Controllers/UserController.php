@@ -81,6 +81,16 @@ class UserController extends Controller
                     'unique_locations' => $user->posts()->distinct('location')->count('location')
                 ];
                 break;
+            case 'rates':
+                $query = $user->reactions()->with(['post' => function($q) use ($search) { // only those posts with search term
+                    if ($search) {
+                        $q->where('title', 'like', "%$search%")
+                            ->orWhere('content', 'like', "%$search%")
+                            ->orWhere('location', 'like', "%$search%");
+                    }
+                }]);
+                $data['posts'] = $query->get()->pluck('post')->filter(); // pluck - returns only posts, filter - removes null values
+                break;
         }
 
         return inertia('User/Show', $data);

@@ -16,7 +16,7 @@ class AuthController extends Controller
             'avatar' => ['nullable', 'file', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'string', 'min:3', 'confirmed'],
+            'password' => ['required', 'string', 'min:3', 'confirmed'], // confirmed is for the password confirmation field
         ]);
 
         $avatarPath = null;
@@ -49,22 +49,20 @@ class AuthController extends Controller
 
     public function login(Request $request){
         $fields = $request->validate([
-            'email' => ['required', 'email'],
-            'password' => ['required'],
+            'email' => ['required', 'email', 'string', 'max:255'],
+            'password' => ['required', 'string'],
         ]);
 
 
         try {
             if (Auth::attempt($fields, $request->remember)) {
                 $request->session()->regenerate();
-                return redirect()->intended('/');
+                return redirect()->intended('/')->with('success', 'Logged in successfully');
             }
 
             return back()->with([
                 'error' => 'The provided credentials do not match our records.',
-            ])->withErrors([
-                'email' => 'The provided credentials do not match our records.',
-            ])->onlyInput('email');
+            ])->withErrors(['email' => ' ', 'password' => ' '])->onlyInput('email');
         } catch (\Exception $e) {
             return back()->with([
                 'error' => 'Login failed: ' . $e->getMessage(),
@@ -72,7 +70,8 @@ class AuthController extends Controller
         }
     }
 
-    public function logout(Request $request){
+    public function logout(Request $request)
+    {
         try {
             Auth::logout();
             $request->session()->invalidate();
@@ -84,5 +83,5 @@ class AuthController extends Controller
                 'error' => 'Logout failed: ' . $e->getMessage(),
             ]);
         }
-
+    }
 }

@@ -69,7 +69,7 @@ const handleDelete = (id) => { // MAKE THAT USERCONTROLLER DELTE ROUTE WOULD RED
                 :key="user.id"
                 :href="`/users/${user.id}`">
                 <td>
-                     <Avatar :avatar="user.avatar" :alt="user.name"/>
+                     <Avatar :path="user.avatar" :alt="user.name"/>
                 </td>
                 <td>{{ user.name }}</td>
                 <td>{{ user.email }}</td>

@@ -64,7 +64,7 @@ const handleRedirect = (tab) => {
         <div class="profile-header">
             <div class="left-section">
                 <div class="avatar-container">
-                    <Avatar :avatar="user.avatar" :alt="user.name"></Avatar>
+                    <Avatar :path="user.avatar" :alt="user.name"></Avatar>
                 </div>
                 <h1>{{ user.name }}</h1>
             </div>
@@ -76,8 +76,8 @@ const handleRedirect = (tab) => {
 
         <div class="nav-bar">
             <button @click.prevent="handleRedirect('posts')" :class="['nav-link', currentTab === 'posts' ? 'active' : '']">Posts</button>
-            <button  @click.prevent="handleRedirect('info')" :class="['nav-link', currentTab === 'info' ? 'active' : '']">Info</button>
-            <button  @click.prevent="handleRedirect('rates')" :class="['nav-link', currentTab === 'rates' ? 'active' : '']">Rates</button>
+            <button @click.prevent="handleRedirect('info')" :class="['nav-link', currentTab === 'info' ? 'active' : '']">Info</button>
+            <button @click.prevent="handleRedirect('rates')" :class="['nav-link', currentTab === 'rates' ? 'active' : '']">Rates</button>
             <Link href="/comments" class="nav-link">Comments</Link>
             <Link href="/friends" class="nav-link">Friends</Link>
             <Link href="/photos" class="nav-link">Photos</Link>
@@ -151,7 +151,7 @@ const handleRedirect = (tab) => {
             </div>
 
             <div
-                v-if="currentTab === 'posts'"
+                v-if="currentTab === 'rates'"
                 class="posts-container"
             >
 
