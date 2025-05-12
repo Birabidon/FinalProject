@@ -192,15 +192,20 @@ class PostController extends Controller
             if ($post->user_rating == $data['rating']) {
                 PostReaction::where('post_id', $post->id)->where('user_id', auth()->id())->delete();
             } else {
-                PostReaction::where('post_id', $post->id)
-                    ->where('user_id', auth()->id())
-                    ->delete(); // delete old rating if exists
+//                PostReaction::where('post_id', $post->id)
+//                    ->where('user_id', auth()->id())
+//                    ->delete(); // delete old rating if exists
 
-                PostReaction::create(
-                    [
-                        'post_id' => $post->id, 'user_id' => auth()->id(),
-                        'rating' => $data['rating']
-                    ]
+//                PostReaction::create(
+//                    [
+//                        'post_id' => $post->id, 'user_id' => auth()->id(),
+//                        'rating' => $data['rating']
+//                    ]
+//                );
+
+                PostReaction::updateOrCreate(
+                    ['post_id' => $post->id, 'user_id' => auth()->id()],
+                    ['rating' => $data['rating']]
                 );
             }
         } catch (\Exception $e) {
