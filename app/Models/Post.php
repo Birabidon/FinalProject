@@ -41,7 +41,7 @@ class Post extends Model
 
     // accessor for automatic average rating calculation
     public function getAverageRatingAttribute() {
-        return $this->reactions()->avg('rating');
+        return $this->reactions()->avg('rating') ?? 0;
     }
 
     public function getUserRatingAttribute($userId = null) {

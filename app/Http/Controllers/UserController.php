@@ -66,7 +66,7 @@ class UserController extends Controller
                 if ($search) {
                     $query->where(function ($q) use ($search) {
                         $q-> where('title', 'like', "%$search%")
-                            ->orWhere('content', 'like', "%$search%")
+//                            ->orWhere('content', 'like', "%$search%")
                             ->orWhere('location', 'like', "%$search%");
                     });
                 }
@@ -82,14 +82,16 @@ class UserController extends Controller
                 ];
                 break;
             case 'rates':
+//                dd($user->reactions()->get());
                 $query = $user->reactions()->with(['post' => function($q) use ($search) { // only those posts with search term
                     if ($search) {
                         $q->where('title', 'like', "%$search%")
-                            ->orWhere('content', 'like', "%$search%")
+//                            ->orWhere('content', 'like', "%$search%")
                             ->orWhere('location', 'like', "%$search%");
                     }
                 }]);
-                $data['posts'] = $query->get()->pluck('post')->filter(); // pluck - returns only posts, filter - removes null values
+                // with('post.user') - to get the user who created the post
+                $data['rates'] = $query->with(['post.user'])->get()->pluck('post')->filter(); // pluck - returns only posts, filter - removes null values
                 break;
         }
 

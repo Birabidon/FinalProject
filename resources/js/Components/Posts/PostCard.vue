@@ -5,12 +5,18 @@ import GoogleMapComponent from "@/Components/GoogleMapOneMarkerComponent.vue";
 import { BIconGeoAlt, BIconCalendar, BIconPerson } from 'bootstrap-icons-vue';
 import Menu from 'primevue/menu';
 import {ref} from "vue";
+import StarsScale from "@/Components/StarsScale.vue";
+import UserAvatar from "@/Components/User/UserAvatar.vue";
 
 
 const props = defineProps({
     post: {
         type: Object,
         required: true
+    },
+    user: {
+        type: Object,
+        required: false
     },
 });
 
@@ -23,11 +29,18 @@ const props = defineProps({
         <Link :href="`/posts/${post.id}`" class="post-link">
             <div class="card-left-side">
                 <div class="card-header">
-                    <div class="card-header-left" v-if="post.user">
-                        <Avatar />
-                        <h2 class="post-author">{{ post.user.name }}</h2>
+                    <div class="card-header-left">
+                        <UserAvatar v-if="user" :user="user" />
                     </div>
 
+                    <div class="card-header-right">
+                        <StarsScale
+                            :votable="false"
+                            :averageRating="parseFloat(post.average_rating)"
+                            :votesCount="parseInt(post.votes_count)"
+                            :userRating="parseInt(post.user_rating)"
+                        />
+                    </div>
                 </div>
 
                 <div class="card-info">
@@ -72,12 +85,20 @@ const props = defineProps({
 .card-header {
     display: flex;
     align-items: start;
+    justify-content: space-between;
+    width: 100%;
 }
 
 .card-header-left {
     margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
 }
 
+.card-header-right {
+    display: flex;
+    align-items: center;
+}
 
 .post-card {
     background: white;

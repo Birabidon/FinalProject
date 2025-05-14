@@ -14,6 +14,7 @@ const props = defineProps(
         user: Object,
         can: Object,
         posts: Object,
+        rates: Object, // actually this is the same posts but those that were rated and with users
         info: Object,
         currentTab: String,
         searchTerm: String
@@ -163,15 +164,16 @@ const handleRedirect = (tab) => {
                         />
                     </div>
 
-                    <div v-if="posts.length === 0" class="empty-state">
+                    <div v-if="rates.length === 0" class="empty-state">
                         {{ searchTerm ? 'No posts matching your search.' : 'No posts yet.' }}
                     </div>
 
                     <PostCard
-                        v-if="posts"
-                        v-for="post in posts"
+                        v-if="rates"
+                        v-for="post in rates"
                         :key="post.id"
                         :post="post"
+                        :user="post.user"
                     />
                 </div>
             </div>
