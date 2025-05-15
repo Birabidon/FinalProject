@@ -64,11 +64,9 @@ class UserController extends Controller
             case 'posts':
                 $query = $user->posts();
                 if ($search) {
-                    $query->where(function ($q) use ($search) {
-                        $q-> where('title', 'like', "%$search%")
+                    $query->where('title', 'like', "%$search%")
 //                            ->orWhere('content', 'like', "%$search%")
                             ->orWhere('location', 'like', "%$search%");
-                    });
                 }
                 $data['posts'] = $query->get();
                 break;

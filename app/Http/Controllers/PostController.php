@@ -49,22 +49,6 @@ class PostController extends Controller
         return inertia('Post/Index', ['posts' => $posts]);
     }
 
-    public function getUserPosts(User $user)
-    {
-        $posts = $user->posts()->get();
-
-        return Inertia::render('User/Profile/ShowUserPosts', [
-            'posts' => $posts,
-            'user' => $user,
-        ]);
-    }
-
-    public function indexWithLocation()
-    {
-        $posts = Post::with('location')->get();
-        return inertia('Post/IndexWithLocation', ['posts' => $posts]);
-    }
-
     /**
      * Show the form for creating a new resource.
      */
@@ -261,7 +245,6 @@ class PostController extends Controller
 
         // If there is no file url in content, remove attachment
         foreach($post->attachments()->get() as $attachment) {
-            $filename = basename($attachment->file_path);
             $pattern = 'src="/storage/' . $attachment->file_path . '"';
 
             if (!str_contains($fields['content'], $pattern)) {

@@ -95,13 +95,12 @@ const sharePost = (id) => {
     console.log('Share post', id);
 };
 
-
 const ratePost = (rating) => {
-    console.log('Rating:', rating);
     // Send rating to backend and update post average rating
     router.post(`/posts/${props.post.id}/rate`, {
         rating: rating
     }, {
+        only: ['post'],
         preserveState: true,
         preserveScroll: true,
     });
